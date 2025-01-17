@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="titulo_pagina">Membro</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/60de48ee9a.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+    <style>
+   
+        body{
+            background-color: aliceblue;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+        #div_geral{
+       
+            background-color: rgba(0, 255, 255, 0);
+        }
+        #div_head {
+            width: 99%;
+            height: 10vh;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(186, 184, 189, 0.719);
+            border: 5px solid rgb(59, 1, 40);
+            margin-bottom: 10px;
+         
+            
+        }
+        #div_body {
+            width: 99%;
+            height: 82vh;
+            background-color: rgba(0, 0, 255, 0);
+            border: 5px solid rgb(59, 1, 40);
+        }
+        #div_perfil img {
+         
+            width: 50px;
+            height: 50px;
+            padding: 2px;
+            border: 1px solid rgb(79, 82, 45);
+            cursor: pointer;
+            border-radius: 50%;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+        #div_perfil img:hover {
+            background-color: rgb(70, 2, 77);
+            border: 1px solid rgb(255, 255, 255);
+
+        }
+        #div_perfil {
+            display: flex;
+            align-items: center;
+        }
+        #div_button button {
+            margin-right: 10px;
+            width: 110px;
+            padding: 7px;
+            border-radius: 3px;
+            padding-left: 15px;
+            padding-right: 15px;
+            background-color: rgba(0, 0, 0, 0.904);
+            color: rgb(250, 2, 2);
+            cursor: pointer;
+            border: 1px solid bisque;
+
+        }
+        #div_button button:hover {
+            background-color: rgb(70, 2, 77);
+            color: rgb(255, 255, 255);
+            border: 1px solid rgb(0, 56, 3);
+        }
+        #div_t1 h5 , #div_t1 h4 {
+            text-align: center;
+
+        }
+        #div_t1_display {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        #div_01, #div_02 {
+            margin-bottom: 20px;
+            padding: 3px;
+            border: 0cap solid black;
+            border-radius: 10px;
+            margin-left: 10px;
+            margin-right: 20px;
+    
+        }
+        #div_01 {
+            max-width: 98%;
+        }
+        #div_01 label, #div_02 label {
+            font-size: 14px;
+
+        }
+        #h2_clube {
+            text-align: center;
+        }
+  
+    
+  
+    </style>
+
+</head>
+<body>
+    <div id="div_geral">
+        <div id="div_head">
+            <div id="div_perfil">
+                <img id="img" src="../src/Profile-PNG-Images.png" alt="" onclick="Click_img()"> <label id="lbl_nome" for="">Nome</label>
+            </div>
+            <div id="div_button">
+                <button>Botão 01</button>
+                <button>Botão 02</button>
+                <button>Botão 03</button>
+            </div>
+        </div>
+        <div id="div_body">
+            <h2 id="h2_clube"></h2>
+            <div id="div_t1">
+                <div id="div_t1_display">
+                    <div>
+                        <h3>Endereço:</h3>  
+                    <div id="list_endereço">      
+                    </div>
+                    </div>
+                    <div>
+                        <h3>Documentos:</h3>
+                    <div id="list_docs">
+                    </div>
+                   </div>
+                </div>
+                   <h4>Editado por ultimo:</h4>
+                <h5 id="Data_edite">Data</h5> <h5 id="Hora_edite">Hora</h5>
+                </div>
+                
+               
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        var login= localStorage.getItem('TudoMlogim')
+        var clube= localStorage.getItem('TudoMclube')
+        var data_ed= document.getElementById('Data_edite')
+        var hora_ed= document.getElementById('Hora_edite')
+        var nome_m = document.getElementById('lbl_nome');
+        var titulo_pag= document.getElementById('titulo_pagina');
+        var Clube=  document.getElementById('h2_clube');
+        Clube.innerHTML= `Clube: ${clube}`
+
+      
+           const MemListDiv = document.getElementById('list_endereço');
+                 MemListDiv.innerHTML= ''
+        const firebaseConfigures = {
+              apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+              authDomain: "sgc-regional.firebaseapp.com",
+              projectId: "sgc-regional",
+              storageBucket: "sgc-regional.appspot.com",
+              messagingSenderId: "572985076108",
+              appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+              measurementId: "G-QDG8H9S46F"
+            };
+                  // Initialize Firebase
+              firebase.initializeApp(firebaseConfigures);
+              const dbm = firebase.firestore();
+          dbm.collection(`Membros_${clube}`).doc(login).get().then(function(doc) {
+         
+          const user = doc.data();
+         var member = doc.id;
+       //  alert(`${member}, - ${login} `)
+            data_ed.innerHTML= user.Data
+            hora_ed.innerHTML= user.Hora
+            document.getElementById('img').src= user.Foto
+            localStorage.setItem('img_M', user.Foto)
+            titulo_pag.innerHTML= `Tudo sobre ${user.Nome}`
+
+            nome_m.innerHTML= user.Nome
+            var div= document.createElement('div')
+            var lbl1= document.createElement('label')
+            var lbl2= document.createElement('label')
+            var lbl3= document.createElement('label')
+            var lbl4= document.createElement('label')
+            var lbl5= document.createElement('label')
+            var lbl6= document.createElement('label')
+          
+            var br1= document.createElement('br')
+            var br2= document.createElement('br')
+            var br3= document.createElement('br')
+            var br4= document.createElement('br')
+            var br5= document.createElement('br')
+            var br6= document.createElement('br')
+            var b1= document.createElement('br')
+            var b2= document.createElement('br')
+            var b3= document.createElement('br')
+            var b4= document.createElement('br')
+            var b5= document.createElement('br')
+            var b6= document.createElement('br')
+        
+            lbl1.textContent= `Rua: ${user.Rua}`
+            lbl2.textContent= `Nº: ${user.Numero}`
+            lbl3.textContent= `Bairro: ${user.Bairro}`
+            lbl4.textContent= `Cidade: ${user.Cidade}`
+            lbl5.textContent= `Complemento: ${user.Ref}`
+            div.id= 'div_01'
+        
+        div.appendChild(lbl1);
+        div.appendChild(b1);
+        div.appendChild(br1);
+        div.appendChild(lbl2);
+        div.appendChild(b2);
+        div.appendChild(br2);
+        div.appendChild(lbl3);
+        div.appendChild(b3);
+        div.appendChild(br3);
+        div.appendChild(lbl4);
+        div.appendChild(b4);
+        div.appendChild(br4);
+        div.appendChild(lbl5);
+        div.appendChild(b5);
+        div.appendChild(br5);
+
+        MemListDiv.appendChild(div);
+         
+            });
+
+            function Click_img() {
+                var foto= localStorage.getItem('img_M')
+            window.open(foto,'Imagem','icon=src/Profile-PNG-Images.png, height=730,width=730,autoHideMenuBar=true');
+        }   
+        var login_2= localStorage.getItem('TudoMlogim')
+        var clube_2= localStorage.getItem('TudoMclube')
+      
+           const MemListDiv_2 = document.getElementById('list_docs');
+                 MemListDiv_2.innerHTML= ''
+
+        const firebaseConfigure = {
+              apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+              authDomain: "sgc-regional.firebaseapp.com",
+              projectId: "sgc-regional",
+              storageBucket: "sgc-regional.appspot.com",
+              messagingSenderId: "572985076108",
+              appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+              measurementId: "G-QDG8H9S46F"
+            };
+                  // Initialize Firebase
+              firebase.initializeApp(firebaseConfigure);
+              const db = firebase.firestore();
+          db.collection(`Membros_${clube_2}`).doc(login_2).get().then(function(doc) {
+
+          const user_2 = doc.data();
+                    
+            var div_2= document.createElement('div')
+            var lbl7= document.createElement('label')
+            var lbl8= document.createElement('label')
+            var lbl9= document.createElement('label')
+            var lbl10= document.createElement('label')
+            var lbl11= document.createElement('label')
+            var lbl12= document.createElement('label')
+            var lbl13= document.createElement('label')
+            var lbl14= document.createElement('label')
+            var br7= document.createElement('br')
+            var br8= document.createElement('br')
+            var br9= document.createElement('br')
+            var br10= document.createElement('br')
+            var br11= document.createElement('br')
+            var br12= document.createElement('br')
+            var b7= document.createElement('br')
+            var b8= document.createElement('br')
+            var b9= document.createElement('br')
+            var b10= document.createElement('br')
+            var b11= document.createElement('br')
+            var b12= document.createElement('br')
+        
+            lbl7.textContent= `Senha: ${user_2.Senha}`
+            lbl8.textContent= `Tel: ${user_2.Tel}`
+            lbl9.textContent= `RG: ${user_2.RG}`
+            lbl10.textContent= `CPF: ${user_2.CPF}`
+            lbl11.textContent= `É membro(a): ${user_2.Categoria}`
+            lbl12.textContent= `Função: ${user_2.Função}`
+
+              div_2.id= 'div_02'
+
+        div_2.appendChild(lbl7);
+        div_2.appendChild(b7);
+        div_2.appendChild(br7);
+        div_2.appendChild(lbl8);
+        div_2.appendChild(b8);
+        div_2.appendChild(br8);
+        div_2.appendChild(lbl9);
+        div_2.appendChild(b9);
+        div_2.appendChild(br9);
+        div_2.appendChild(lbl10);
+        div_2.appendChild(b10);
+        div_2.appendChild(br10);
+        div_2.appendChild(lbl11);
+        div_2.appendChild(b11);
+        div_2.appendChild(br11);
+        div_2.appendChild(lbl12);
+        div_2.appendChild(b12);
+
+        MemListDiv_2.appendChild(div_2);
+            
+            });
+
+    </script>
+    
+</body>
+</html>

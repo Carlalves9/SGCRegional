@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Permissões</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/60de48ee9a.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+    <style>
+
+        body {
+            
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            padding-left: 10px;
+            padding-right: 10px;
+            font-weight: bold;
+            background-color: rgb(26, 25, 25);
+            color: aliceblue;
+            
+        }
+        input {
+            width: 250px;
+            padding: 7px;
+            border: 2px solid rgb(85, 82, 82);
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 2px solid rgb(68, 65, 65);
+            margin-left: 7px;
+        }
+        input:hover {
+            background-color: rgba(8, 216, 216, 0.986);
+            color: rgb(141, 25, 25);
+        }
+        label {
+            font-size: 12px;
+            margin-left: 10px;
+            
+        }
+        #list-permitidos {
+            max-height: 46vh;
+            min-height: 46vh;
+            overflow-y: auto;
+            border: 2px solid rgba(119, 108, 93, 0.171);
+            border-radius: 7px;
+            background-color: rgb(10, 10, 10);
+            color: rgb(249, 250, 245);
+           font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+        #lbl-novo {
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        #lbl-novo:hover {
+            color: rgba(2, 167, 11, 0.945);
+        }
+        #DIV_FLEXX {
+            display: flex;
+            
+        }
+        #flex,
+        #flex_2,
+        #flex_3  {
+            display: none;
+        }
+         button {
+            margin-left: 5px;
+            margin-right: 5px;
+            padding: 5px;
+            cursor: pointer;
+            padding-left: 10px;
+            padding-right: 10px;
+            color: rgb(255, 255, 255);
+            background-color: rgba(104, 7, 104, 0);
+            border: 0px solid rgba(53, 53, 53, 0.486);
+            border-radius: 4px;
+            
+        }
+        #flex_3 button {
+            margin-left: 5px;
+            margin-right: 5px;
+            padding: 7px;
+            cursor: pointer;
+            padding-left: 10px;
+            padding-right: 10px;
+            color: rgb(255, 255, 255);
+            background-color: rgba(104, 7, 104, 0.945);
+            border: 1px solid rgba(53, 53, 53, 0.486);
+            border-radius: 4px;
+
+        }
+        #flex_2 button:hover {
+             color: rgb(5, 185, 86);
+            font-weight: bold;
+            background-color: aqua;
+        }
+        #flex_2 label:hover {
+            cursor: pointer;
+            color: rgba(8, 219, 113, 0.945);
+            font-weight: bold;
+
+        }
+        #flex label:hover {
+            cursor: pointer;
+            color: rgba(13, 240, 6, 0.945);
+            font-weight: bold;
+
+        }
+        ul {
+            color: rgba(255, 255, 255, 0.945);
+            font-size: 10px;
+            cursor: pointer;
+            padding: 7px;
+            margin-left: 10px;
+            margin-right: 20px;
+            border-bottom: 1px solid rgba(94, 92, 93, 0.322);
+            background-color: black;
+            
+        }
+     
+        #excluir {
+            padding: 1px;
+            float: right;
+            font-size: 16px;
+            color: aliceblue;
+            margin-right: 5px;
+            align-items: center;
+            
+        }
+        ul:hover {
+            color:rgb(255, 255, 255);
+            background-color: rgb(109, 5, 83);
+            border: 1px solid rgb(56, 1, 44);
+            border-radius: 5px;
+        }
+        #excluir:hover,
+        #limpar:hover {
+            color:rgb(255, 255, 255);
+            background-color: rgb(109, 5, 83);
+            border: 0px solid rgb(36, 0, 30);
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+        ::-webkit-scrollbar {
+            width: 10px;
+            margin-left: 5px;
+            margin-top: 5px;
+            /* Largura da barra de rolagem */
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            margin-left: 5px;
+            background-color: rgb(255, 255, 255);
+            /* Cor do polegar da barra de rolagem */
+            margin-top: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+         ::-webkit-scrollbar-track {
+            /* Cor da trilha da barra de rolagem */
+            margin-top: 5px;
+            border-radius: 7 rgb(102, 3, 81);
+        }
+        #salvar {
+            font-weight: bold;
+        }
+        #salvar:hover {
+            background-color: rgb(0, 248, 41);
+            color: brown;
+        }
+        #i-ad {
+            font-size: 18px;
+        }
+        #i-adm {
+            font-size: 16px;
+        }
+        #flex_3 {
+            float: left;
+        }
+        #select_1 {
+            width: 130px;
+            padding: 5px;
+            cursor: pointer;
+            background-color: rgb(255, 255, 255);
+        }
+     
+            
+        
+
+    </style>
+</head>
+<body>
+    
+    
+    <div id="div-geral">
+<h3> Lista de Administradores Regionais  <i id="i-ad" class="fa-solid fa-users"></i></h3>
+        <div id="list-permitidos">
+
+        </div>
+        <br>
+        <div>
+            <label id="lbl-novo" onclick="novo_P()">Novo Administrador 
+                <i id="i-adm" class="fa-solid fa-user-plus"></i>
+            </label>
+        </div>
+        <br>
+        <div id="cad_P">
+            <div id="DIV_FLEXX">
+<div id="flex">
+<label> Nome <br>
+    <input type="text" id="nome" placeholder="Digíte nome">
+</label>
+</div>
+<div id="flex_2">
+<label> Email <br>
+    <input  type="email" id="email" placeholder="Digíte email">
+</label>
+</div>
+</div>
+<div id="flex_3">
+    <label> Password <br>
+        <input  type="text" id="senha" placeholder="Digíte Senha">
+    </label>
+    <select name="" id="select_1">
+        <option value=""> Função regional</option>
+        <option value="Colaborador"> Colaborador</option>
+        <option value="Auxiliar"> Auxiliar</option>
+        <option value="Capelão"> Capelão</option>
+        <option value="Tesoureiro"> Tesoureiro</option>
+        <option value="Comunicação"> Comunicação</option>
+        <option value="Secretária"> Secretária</option>
+        <option value="Regional"> Regional</option>
+    </select>
+
+<button id="salvar" onclick="salvar_P()"> Salvar <i class="fa-solid fa-check"></i></button> <label id="limpar" onclick="limpar_p()">Limpar</label>
+</div>
+
+  
+
+    </div>
+
+    <script>
+        function limpar_p() {
+
+            var email = document.getElementById('email').value= ''
+            var nome = document.getElementById('nome').value= ''
+            var password = document.getElementById('senha').value= ''
+
+        }
+    </script>
+    <script>
+     var userListDivs = document.getElementById('list-permitidos')
+        userListDivs.innerHTML= ''
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+authDomain: "sgc-regional.firebaseapp.com",
+projectId: "sgc-regional",
+storageBucket: "sgc-regional.appspot.com",
+messagingSenderId: "572985076108",
+appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+measurementId: "G-QDG8H9S46F"
+};
+
+        firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+const produtosRef = db.collection('Regionais');
+
+produtosRef.get().then((querySnapshot) => {
+    querySnapshot.forEach(doc => {
+
+        const user = doc.data();
+
+        const li = document.createElement("ul");
+
+        li.textContent = `${user.Nome}/ ${user.Email}/ ${user.Senha}`;
+        const edite = document.createElement('button');
+        edite.className = "fa-solid fa-trash"
+         edite.textContent = ``
+         edite.id = 'excluir'
+         li.appendChild(edite);
+        userListDivs.appendChild(li); 
+
+        li.addEventListener("click", () => {
+            // Aqui você pode fazer algo quando o item for clicado
+
+showConfirm('click')
+    function showConfirm() {
+            Swal.fire({
+                title: `Excluir Administrador ?`,
+                text: `Nome: ${user.Nome} , Email: ${user.Email} , Função: ${user.Cargo} / Add desde: ${user.Data}, - ${user.Hora}`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, Excluir !',
+                cancelButtonText: 'Não, cancelar'
+            }).then((result) => {
+               
+                if (result.isConfirmed) {
+                
+                       
+            const firebaseConfig = {
+    apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+    authDomain: "sgc-regional.firebaseapp.com",
+    projectId: "sgc-regional",
+    storageBucket: "sgc-regional.appspot.com",
+    messagingSenderId: "572985076108",
+    appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+    measurementId: "G-QDG8H9S46F"
+  };
+        firebase.initializeApp(firebaseConfig);
+
+        let dbs = firebase.firestore();
+            dbs.collection('Regionais').doc(user.Email).delete()
+              .then(() => {          
+                     Swal.fire(
+                      
+                      'Deletado!',
+                      'Administrador foi deletado.',
+                      'success'
+                      )
+
+                            setTimeout(function() {
+                              
+                                window.location.reload()
+                            }, 3000)
+                        })
+    } else {
+
+    }
+    })
+}
+}
+   )
+})
+        
+});
+
+        function salvar_P(){
+
+       //  localStorage.setItem('url_foto_user', Foto)
+      //   localStorage.setItem('Foto_user_name', Name_foto)
+      //   localStorage.setItem('Diretor', Nome)
+      //   localStorage.setItem('Telefone_diretor', Telefone)
+      //   localStorage.setItem('Senha_D_Clube', Senha)
+      //   localStorage.setItem('Email_diretor', Email)
+      //   localStorage.setItem('Clube_nome', Clube)
+
+var data = localStorage.getItem('data')
+var hora = localStorage.getItem('hora')
+
+var email = document.getElementById('email').value;
+var nome = document.getElementById('nome').value;
+var senha= document.getElementById('senha').value;
+var função= document.getElementById('select_1').value
+
+if(!nome || nome == '' || !email || email == '' || !senha || senha == '' || !função || função == '') {
+
+    window.Swal.fire('ERRO!','Preencha todos os campos!')
+} else {
+
+    const firebaseConfigs = {
+    apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+    authDomain: "sgc-regional.firebaseapp.com",
+    projectId: "sgc-regional",
+    storageBucket: "sgc-regional.appspot.com",
+    messagingSenderId: "572985076108",
+    appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+    measurementId: "G-QDG8H9S46F"
+  };
+        // Initialize Firebase
+    firebase.initializeApp(firebaseConfigs);
+        var db = firebase.firestore()
+
+     db.collection('Regionais').doc(email).set({
+
+            Clube:'Regionais',
+            Nome: nome,
+            Email: email,
+            Data: data,
+            Hora: hora,
+            Senha: senha,
+            Tel: '',
+            Foto: 'src/Profile-PNG-Images.png',
+            Data_NSC: '',
+            End: '',
+            Cargo: função,
+         
+           
+                    
+
+})
+      window.swal( 'Permissão Total concedida',` Nome: ${nome} _ Email: ${email} _ Função:${função} _ Senha: ${senha} _ Data: ${data}, ${hora}`);
+
+setInterval(function(){
+   
+   window.location.reload()
+
+},5000)
+
+}
+        }
+    </script>
+
+       
+    </script>
+
+    <script>
+
+      localStorage.setItem('flex', '')
+
+        function novo_P() {
+            var flex = localStorage.getItem('flex')
+
+          if(!flex || flex == ''){
+
+         document.getElementById('flex').style.display='Block'
+         document.getElementById('flex_2').style.display='Block'
+              document.getElementById('flex_3').style.display='Block'
+         localStorage.setItem('flex', 'Block')
+
+          } else {
+         document.getElementById('flex').style.display='none'
+         document.getElementById('flex_2').style.display='none'
+           document.getElementById('flex_3').style.display='none'
+         localStorage.setItem('flex', '')
+          }
+        }
+    </script>
+     <script>
+
+        setInterval(function() {
+    
+            const newDate = new Date()
+            var dia = String(newDate.getDate()).padStart(2, '0');
+            var mes = String(newDate.getMonth() + 1).padStart(2, '0');
+            var ano = String(newDate.getFullYear()).padStart(2, '0')
+            var data = `${dia}/${mes}/${ano}`
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+           // const lbl_data = document.getElementById('lbl-data');
+           
+            // lbl_data.innerHTML = `${data}`
+         
+            localStorage.setItem('data', data)
+            localStorage.setItem('hora', timeString)
+    
+        }, 1000)
+    
+    </script>
+</body>
+</html>

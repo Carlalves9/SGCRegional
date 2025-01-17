@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membros</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/60de48ee9a.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<style>
+*{
+    margin: 0%;
+    padding: 0%;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(4, 163, 184);
+}
+#div_geral{
+    width: 100%; 
+    background-color: rgba(255, 255, 255, 0);
+    display: none;
+}
+#div_escolha {
+    margin: 0 auto;
+    width: 91%;
+    height: 5vh;
+    padding-bottom: 20px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(39, 38, 39, 0.774);
+    padding: 10px;
+    bottom: 5px;
+    position: fixed;
+    margin-left: 20px;
+    border-radius: 5px;
+
+}
+
+#displaY_1 {
+  
+    display: flex;
+    justify-content: space-around;
+}
+#div_escolha button {
+  padding: 10px;
+  width: 200px;
+  background-color: rgba(224, 222, 224, 0);
+  color: rgb(255, 249, 249);
+  cursor: pointer;
+  border-radius: 5px;
+  border: 2px solid rgb(255, 255, 255);
+
+ 
+}
+#div_escolha button:hover {
+    background-color: rgb(8, 240, 248);
+    color: rgb(119, 5, 5);
+    border: 2px solid rgb(2, 158, 2);
+}
+#files {
+    display: none;
+}
+#cad_novo_membro {
+    margin-top: 10px;
+    margin-left: 20%;
+    height: 82vh;
+    overflow-y: auto;
+    margin-bottom: 30px;
+}
+#cad_novo_membro label {
+    font-size: 12px;
+    cursor: pointer;
+}
+#cad_novo_membro input {
+    cursor: pointer;
+    padding: 9px;
+    width: 400px;
+    border: 2px solid rgb(128, 3, 76);
+    border-radius: 4px;
+}
+#cad_novo_membro input:hover {
+    background-color: aqua;
+    color: rgb(121, 3, 3);
+}
+#cad_novo_membro label:hover {
+    color: rgb(211, 7, 7);
+}
+#cad_novo_membro select {
+    padding: 7px;
+    width: 180px;
+    cursor: pointer;
+}
+#img {
+   
+    margin-right: 30px;
+}
+#img_foto {
+    max-width: 55px;
+    max-height: 55px;
+    cursor: pointer;
+}
+#cad_novo_membro button {
+    width: 200px;
+    padding: 10px;
+    cursor: pointer;
+    border: 2px solid rgb(34, 33, 33);
+}
+#cad_novo_membro button:hover {
+    background-color: rgb(6, 175, 43);
+    color: rgb(255, 255, 255);
+    border: 2px solid rgba(3, 112, 48, 0.733);
+}
+#cad_novo_membro #limpar {
+    border: 0cap;
+    background-color: rgba(240, 248, 255, 0);
+}
+#cad_novo_membro #limpar:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(150, 7, 7);
+   
+}
+#i_logo {
+    font-size: 30px;
+    color: rgb(168, 2, 2);
+    cursor: pointer;
+    margin-left: 10px;
+}
+#i_logo:hover {
+    color: rgb(50, 129, 3);
+}
+    #myProgress {
+            width: 80%;
+            background-color:rgb(122, 120, 120);
+            display: none;
+            border-radius: 7px;
+            margin-left: 1%;
+            margin-bottom: 10px;
+        }   
+        #myBar {
+            width: 1%;
+            /* Começa com 1% */
+            height: 12px;
+            background-color:rgb(117, 233, 9);
+            text-align: center;
+            /* Centraliza horizontalmente */
+            line-height: 10px;
+            /* Centraliza verticalmente */
+            color: rgb(61, 59, 59);
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        #cad_novo_membro  #Data {
+            width: 160px;
+            margin-top: 10px;
+            font-weight: bold;       
+        }
+        #i_data {
+            cursor: pointer;
+            display: none;
+        }
+        #div_IMG {
+            margin: 0 auto;
+            width: 74%;        
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #IMGG {
+           max-width:400px;
+           max-height: 400px;
+           padding: 10px;
+           border: 3px solid rgb(37, 37, 37);
+           border-radius: 20px;
+           margin-top: 10%;
+           margin-left: 15px;
+        }
+        #lbl_sair{
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            color: rgba(197, 47, 9, 0.993);
+           
+        }
+        #lbl_sair:hover {
+            color: rgb(255, 0, 0);
+            cursor: pointer;
+
+        }
+        #i_sair {
+            margin-top: 7px;
+            font-size: 14px;
+        }
+        #inputs {
+           
+         padding: 0%;
+        }
+   
+        ::-webkit-scrollbar {
+            width: 10px;
+            margin-left: 5px;
+            margin-top: 5px;
+            /* Largura da barra de rolagem */
+            cursor: pointer;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            margin-left: 5px;
+            background-color: rgba(197, 47, 9, 0.993);
+            /* Cor do polegar da barra de rolagem */
+            margin-top: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+         ::-webkit-scrollbar-track {
+            /* Cor da trilha da barra de rolagem */
+            margin-top: 5px;
+            border-radius: 7 rgb(177, 175, 175);
+            background-color: rgba(38, 39, 39, 0.993);
+            border-radius: 10px;
+            cursor: pointer;
+         }
+         #label_foto {
+            font-size: 16px;
+            font-weight: bold;
+         }
+         #img_foto {
+            width: 50px;
+            height: 50px;
+            padding: 3px;
+            border: 2px solid beige;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 33%;
+         }
+         #input_numero {
+            width: 150px;
+         }
+         #inputs .input_numero {
+            width: 100px;
+         }
+         #inputs  .docs {
+            width: 200px;
+         }
+         #inputs input {
+            margin-bottom: 10px;
+         }
+         #inputs select{
+            border-radius: 5px;
+            background-color: rgb(221, 240, 240);
+            
+            
+         }
+         #inputs select:hover {
+            background-color: rgb(3, 194, 252);
+            color: rgb(100, 4, 79);
+         }
+         #inputs option {
+            background-color: rgb(100, 4, 79);
+            color: aliceblue;
+         }
+         #inputs option:hover {
+            background-color: aqua;
+            color: rgb(100, 4, 79);
+         }
+         #div_lista_membros {
+            margin: 0 auto;
+            width: 82%;
+            height: 85vh;
+            overflow-y: auto;
+            display: none;
+            padding-right: 20px;
+         }
+         ul {
+            margin: 0 auto;
+            width:95% ;
+            height: 5vh;
+            margin: 0 auto;
+            margin-top: 10px;
+            border: 2px solid rgb(163, 163, 161);
+            padding: 10px;
+            background-color: rgb(255, 255, 255);
+            overflow-y: auto;
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            padding-bottom: 10px;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            color: rgb(24, 23, 23);
+            
+         }
+         ul:hover {
+            background-color: rgb(5, 255, 242);
+            
+         }
+         #ul_img {
+            width: 30px;
+            height: 30px;
+            padding: 2px;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 1px solid rgb(54, 54, 53);
+         }
+         #ul_img:hover {
+            background-color: rgb(4, 155, 29);
+         }
+         #label_mem {
+            font-size: 14px;
+            font-weight: bold;
+         }
+         
+        #ATT_mem {
+            padding: 5px;
+            border-radius: 50%;
+            background-color: rgb(14, 126, 3);
+            border: 0cap;
+            margin-right: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+       
+        #ATT_mem:hover {
+            background-color: rgb(25, 255, 4);
+           
+        }
+        #edite_mem, #Ver_memb, #exc, #Ver_prévia {
+            padding: 5px; 
+            border: 0cap;
+            cursor: pointer;
+            background-color: rgba(240, 248, 255, 0);
+          
+
+        }
+        #edite_mem:hover, #Ver_memb:hover, #exc:hover, #Ver_prévia:hover {
+            color: rgb(253, 3, 3);
+           
+        }
+        #Ver_prévia {
+            font-weight: bold;
+            text-decoration: underline 2px solid red;
+        }
+        
+  
+</style>
+
+</head>
+<body>
+    <label id="lbl_sair" for="" onclick="Sair()"><i id="i_sair" class="fa-solid fa-reply" ></i> Sair</label>
+    <div id="div_IMG">
+        <img id="IMGG" src="" alt="">
+         </div>
+    <div id="div_escolha">    
+        <div id="displaY_1">
+        <button id="Novo_membro" onclick="Novo_membro()">Novo membro</button>
+        <button id="Editar_membro" onclick="Editar_membro()">Editar membro</button>
+    </div>
+    </div>         
+    <div id="div_geral">
+        <div id="div_lista_membros" >
+            <div id="div_list">
+
+            </div>
+        </div>
+
+
+        <div id="cad_novo_membro">         
+            <div id="inputs">
+                <div id="img">         
+                    <div id="myProgress">
+                        <div id="myBar">10%</div>
+                        <input id="files" type="file"> 
+                    </div>  
+                    <img id="img_foto" src="../src/Profile-PNG-Images.png" alt="#" onclick="img_foto()">                 
+                </div>               
+                <label for=""> Nome <br>
+                    <input id="input_nome" type="text" placeholder="Nome:">
+                </label><br>
+                <label for=""> Senha de 4 a 8 digitos <br>
+                    <input id="input_Senha" type="text" placeholder="Senha:">
+                </label><br><br>
+                <label id="label_foto" for="" onclick="Add_foto()">Foto do Membro  <i id="i_logo" class="fa-regular fa-file-image" ></i></label>
+                <br><br>
+                <label for=""> Email<br>
+                    <input id="input_email" type="email" placeholder="Email:"> Opcional
+                </label><br>
+                <label for=""> Telefone<br>
+                    <input id="input_tel" type="tel" placeholder="Telefone:">
+                </label><br>
+                <label for=""> Rua<br>
+                    <input id="input_rua" type="text" placeholder="Rua:"> 
+                </label><br>
+                <label for=""> Número<br>
+                    <input id="input_numero" class="input_numero" type="number" placeholder="Número:"> 
+                </label><br>
+                <label for=""> Bairro<br>
+                    <input id="input_bairro" type="text" placeholder="bairro:"> 
+                </label><br>
+                <label for=""> Cidade<br>
+                    <input id="input_cidade" type="text" placeholder="Cidade:"> 
+                </label><br>
+                <label for="">Complemento "Referência":<br>
+                    <input id="input_Ref" type="text" placeholder="Dígite Complemento - Ref...:"> Opcional
+                </label><br>
+                <label for=""> RG<br>
+                    <input id="input_RG" class="docs" type="text" placeholder="RG:"> Opcional
+                </label><br>
+                <label for=""> CPF<br>
+                    <input id="input_CPF" class="docs"  type="text" placeholder="CPF:"> Opcional
+                </label><br><br>
+                <select name="" id="select_01">
+                    <option value="">Desbravador ou Diretoria</option>
+                    <option value="Diretoria">Diretoria</option>
+                    <option value="Desbravador">Desbravador</option>
+                </select>
+                <select name="" id="select_02">
+                    <option value="">Cargo no clube</option>
+                    <option value="Capitão">Capitão(ã)</option>
+                    <option value="Padioleiro">Padioleiro(a)</option>
+                    <option value="Conselheiro">Conselheiro(a)</option>
+                    <option value="Capelão">Capelão(â)</option>
+                    <option value="Tesoureiro">Tesoureiro(a)</option>
+                    <option value="Secretária">Secretária(o)</option>
+                    <option value="Associado">Associado(a)</option>           
+                    <option value="Diretor">Diretor(a)</option>
+                </select><br>
+                <i id="i_data" class="fa-regular fa-calendar" for="data" onclick="Data()"></i>
+                <input id="Data" type="date" for="data" placeholder="Data de nascimento"> <label for="">Data de Nascimento </label>
+                <br> <br>
+                <button onclick="salvar()">Salvar</button>  <button id="limpar" onclick="limpar()"> Limapar</button>
+                
+            </div>
+        </div>
+    </div>
+    <script>
+
+         const MemListDiv = document.getElementById('div_list');
+                 MemListDiv.innerHTML= ''
+        var clube = localStorage.getItem('Clube_set_clube')
+        const firebaseConfigures = {
+              apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+              authDomain: "sgc-regional.firebaseapp.com",
+              projectId: "sgc-regional",
+              storageBucket: "sgc-regional.appspot.com",
+              messagingSenderId: "572985076108",
+              appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+              measurementId: "G-QDG8H9S46F"
+            };
+                  // Initialize Firebase
+              firebase.initializeApp(firebaseConfigures);
+              const dbm = firebase.firestore();
+         const produtosRef = dbm.collection(`Membros_${clube}`);
+
+          produtosRef.get().then((querySnapshot) => {
+          querySnapshot.forEach(doc => {
+
+          const user = doc.data();
+        
+          var nome= user.Nome 
+          var docNome= nome.split(' ');
+          var NomeMembro = `${docNome[0]} ${docNome[1]}`  ;
+          var Data_evento= user.Data_NASC
+          var  data = Data_evento.split('-');
+          var data_nascimento= `${data[2]}/${data[1]}/${data[0]}`;
+        const button = document.createElement('button');
+        const button_ = document.createElement('button');
+        const button_2 = document.createElement('button');
+        const button_3 = document.createElement('button');
+        const button_4 = document.createElement('button');
+        const label = document.createElement('label');
+        const label_2 = document.createElement('label');
+        const userImage = document.createElement('img');
+        const br = document.createElement("br");
+        const li = document.createElement("ul");
+      
+        userImage.src = ` ${user.Foto}`
+        label.textContent = `${NomeMembro} `;
+
+        userImage.id = 'ul_img'
+        button_.id = 'edite_mem'
+        button.id = 'ATT_mem'
+        button_2.id = 'Ver_memb'
+        button_3.id = 'Ver_prévia'
+        label.id = 'label_mem'
+        button_.className="fa-solid fa-pen"
+        button_2.className="fa-solid fa-eye"
+        button.textContent = ``;
+        button_3.textContent = `Prévia`;
+        button_4.id = `exc`;
+        button_4.className="fa-solid fa-trash"
+        
+        li.appendChild(userImage);
+        li.appendChild(label_2);
+        li.appendChild(label);
+        li.appendChild(button_);
+        li.appendChild(button_3);
+        li.appendChild(button_4);
+        li.appendChild(button_2);
+        li.appendChild(button);
+        MemListDiv.appendChild(li);
+
+        button_2.addEventListener('click',function(){
+            window.Swal.fire({
+             title: `Cadastro  complementar?`,
+             text: `Ver tudo sobre : ${user.Nome}!`,
+             icon: 'warning',
+             showCancelButton: true,
+             confirmButtonColor: '#3085d6',
+             cancelButtonColor: '#d33',
+             confirmButtonText: 'Sim, Ver !',
+             cancelButtonText: 'Não, cancelar'
+         }).then((result) => {
+         
+             if (result.isConfirmed) { 
+               
+               localStorage.setItem('TudoMlogim', doc.id)
+               localStorage.setItem('TudoMclube', clube)
+              
+                window.open('../Clubes/Tudomembro.html','_blank', "icon=src/Profile-PNG-Images.png, width=910, height=730, resizable= false, autoHideMenuBar= true")
+         
+
+                 
+             }
+            })
+
+        });
+
+        button_4.addEventListener('click', function(){
+            window.Swal.fire({
+             title: `Excluir?`,
+             text: `Deseja mesmo excluir : ${user.Nome}?  (A exclusão não poderá ser desfeita!)`,
+             icon: '',
+             showCancelButton: true,
+             confirmButtonColor: '#3085d6',
+             cancelButtonColor: '#d33',
+             confirmButtonText: 'Sim, Excluir !',
+             cancelButtonText: 'Não, cancelar'
+         }).then((result) => {
+         
+             if (result.isConfirmed) { 
+               
+                const dbex = firebase.firestore();
+                dbex.collection(`Membros_${clube}`).doc(doc.id).delete()
+                Swal.fire(`Sucesso!`,`Excluido: ${doc.id}`,'success')
+                setTimeout(function(){
+                    location.reload()
+                },3000)
+            
+
+                 
+             }
+            })
+
+        });
+
+        userImage.addEventListener('click', function(){
+            window.open(user.Foto,'Imagem','icon=src/Profile-PNG-Images.png, height=730,width=730,autoHideMenuBar=true');
+
+        });
+        button.addEventListener('click',function(){
+            Swal.fire(`ATIVO!`,` ${user.Nome} está Ativo`,'success')
+        });
+
+        button_.addEventListener("click", () => {
+           
+        
+            window.Swal.fire({
+             title: `Editar Cadastro?`,
+             text: ` Editar cadastro de: ${user.Nome}?`,
+             icon: 'warning',
+             showCancelButton: true,
+             confirmButtonColor: '#3085d6',
+             cancelButtonColor: '#d33',
+             confirmButtonText: 'Sim, Editar !',
+             cancelButtonText: 'Não, cancelar'
+         }).then((result) => {
+         
+             if (result.isConfirmed) { 
+                Novo_membro()
+                document.getElementById('img_foto').src= user.Foto  
+             document.getElementById('input_nome').value= user.Nome
+            var senha_m = document.getElementById('input_Senha').value= user.Senha
+            var Email = document.getElementById('input_email').value= user.Email
+            var select_01 = document.getElementById('select_01').value= user.Categoria
+            var select_02 = document.getElementById('select_02').value= user.Função
+            var input_tel = document.getElementById('input_tel').value= user.Tel
+            var input_rua = document.getElementById('input_rua').value= user.Rua
+            var input_numero = document.getElementById('input_numero').value= user.Numero
+            var input_cidade = document.getElementById('input_cidade').value= user.Cidade
+            var input_bairro = document.getElementById('input_bairro').value= user.Bairro
+            var clube = localStorage.getItem('Clube_set_clube')//user.clube
+            var data_= user.Data
+            var Data= data_.split('/')
+            var data_Nasc = document.getElementById('Data').value= `${Data[2]}-${Data[1]}-${Data[0]}` 
+            window.localStorage.setItem('add_foto_member', user.Foto);
+            var data = user.Data
+            var hora = user.Hora
+            var RG = document.getElementById('input_RG').value= user.RG
+            var CPF = document.getElementById('input_CPF').value= user.CPF
+            var Ref = document.getElementById('input_Ref').value= user.Ref
+                
+             }
+            })
+          });
+          button_3.addEventListener("click", () => {
+            window.Swal.fire({
+             title: `Ver informações prévias?`,
+             text: `Ver mais de : ${user.Nome}?`,
+             icon: '',
+             showCancelButton: true,
+             confirmButtonColor: '#3085d6',
+             cancelButtonColor: '#d33',
+             confirmButtonText: 'Sim, Ver !',
+             cancelButtonText: 'Não, cancelar'
+         }).then((result) => {
+         
+             if (result.isConfirmed) { 
+                 window.swal(`${NomeMembro}`,`Nome: ${user.Nome}\nSenha:_ ${user.Senha}\nEmail:_ ${user.Email} \ntel:_ ${user.Tel}\nRua:_ ${user.Rua}\n Nº:_ ${user.Numero}\nBairro:_ ${user.Bairro}\nCidade:_ ${user.Cidade}\nComple:_ ${user.Ref}\nData Nasc.:_${data_nascimento}\nÉ:_ ${user.Categoria}\nFunção:_ ${user.Função}\nRG:_ ${user.RG}NCPF:_ ${user.CPF}\nData ult-edição:_${user.Data}\nHorário ult-edição:_${user.Hora}\n`,`${user.Foto}`)
+             }
+            })
+          });
+
+        })
+     })
+    
+    
+    </script>
+
+    <script>
+        var logo= localStorage.getItem('Logo_set_clube')
+        document.getElementById('IMGG').src= logo
+        localStorage.setItem('add_foto_member', '');
+      
+        function Novo_membro() {
+            
+            document.getElementById('div_geral').style.display= "block"
+             document.getElementById('cad_novo_membro').style.display= "block"
+             document.getElementById('div_IMG').style.display= 'none'
+               document.getElementById('div_lista_membros').style.display= 'none'
+
+        };
+
+        function Sair() {
+            limpar() 
+            document.getElementById('div_geral').style.display= "none"
+             document.getElementById('cad_novo_membro').style.display= "nome"
+             document.getElementById('div_IMG').style.display= 'block'
+             document.getElementById('div_lista_membros').style.display= 'none'
+
+        }
+        function Editar_membro() {
+            limpar() 
+            document.getElementById('div_geral').style.display= "block"
+             document.getElementById('cad_novo_membro').style.display= "none"
+             document.getElementById('div_IMG').style.display= 'none'
+             document.getElementById('div_lista_membros').style.display= 'block'
+
+        }
+
+    </script>
+
+    <script>
+        function Add_foto() {
+
+            var nome = document.getElementById('input_nome').value;
+            var senha_ = document.getElementById('input_Senha').value;
+            if(!nome || nome == '' || !senha_ || senha_ == ''){
+                window.Swal.fire( 'Atenção!', 'Antes de escolher a foto do novo membro <p> preencha os campos: (Nome) e (Email)<p>_________________________________ ','warning')
+            } else {
+
+                document.getElementById('files').click()
+
+        //        var logo= localStorage.getItem('Logo_set_clube')
+               var clube= localStorage.getItem('Clube_set_clube')
+        //       var senha= localStorage.getItem('Senha_set_clube')
+        // //      var diretor= localStorage.getItem('Diretor_set_clube')
+          //     var email_D= localStorage.getItem('Email_diretor_set_clube')
+          //     var secretária= localStorage.getItem('Secretária_set_clube')
+          //     var email_S= localStorage.getItem('Email_secretária_set_clube')
+          //     var data= localStorage.getItem('Data_set_clube')
+          //     var hora= localStorage.getItem('Hora_set_clube')
+          //     var ativo= localStorage.getItem('Estado_clube')
+          //     var data_D= localStorage.getItem('D_Desativação_set_clube')
+          //     var hora_D= localStorage.getItem('H_Desativação_set_clube')
+           //    var descrição= localStorage.getItem('Descrição_set_clube')
+           //    var fundado= localStorage.getItem('Fundado_set_clube')
+           //    var end= localStorage.getItem('End_set_clube')
+           //    var facebook= localStorage.getItem('Facebook_set_clube')
+            //   var instagran= localStorage.getItem('Instagran_set_clube')
+        //       var whatsApp= localStorage.getItem('WhatsApp_set_clube')
+
+
+         const firebaseConfig = {
+          apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+          authDomain: "sgc-regional.firebaseapp.com",
+          projectId: "sgc-regional",
+          storageBucket: "sgc-regional.appspot.com",
+          messagingSenderId: "572985076108",
+          appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+          measurementId: "G-QDG8H9S46F"
+         
+         };
+         firebase.initializeApp(firebaseConfig);
+         
+         var uploader = document.getElementById('uploader ');
+         var fileButton = document.getElementById('files');
+         
+         fileButton.addEventListener('change', function(e) {
+             var file = e.target.files[0];
+             var storageRef = firebase.storage().ref(`Foto_user_${clube}/` +`${nome},${senha_}` );
+             var task = storageRef.put(file);
+             task.on('state_changed', function progress(snapshot) {
+         
+                 var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                 uploader.value = percentage;
+         
+             }, function error(err) {
+         
+             }, function complete() {
+
+        storageRef.getDownloadURL().then(function(url_imagem) {
+     
+            document.getElementById('myProgress').style.display = 'block'
+            var i = 0;
+
+            if (i == 0) {
+                i = 1;
+                var elem = document.getElementById("myBar");
+                var width = 1;
+                var id = setInterval(frame, 30);
+
+                function frame() {
+                    if (width >= 100) {
+                        clearInterval(id);
+                        i = 0;                     
+                        window.localStorage.setItem('add_foto_member', url_imagem);
+                        document.getElementById('img_foto').src= url_imagem                  
+                          setTimeout(function(){
+                              document.getElementById('myProgress').style.display = 'none'
+                          },2000)
+                        
+                    } else {
+                        width++;
+                        elem.style.width = width + "%";
+                        elem.innerHTML = width + "%"; // Atualiza o texto do rótulo
+                    }
+                }
+            }
+
+        })
+    })
+})
+
+}};
+                  
+        function img_foto() {
+            var ver_foto= localStorage.getItem('add_foto_member')
+            if(!ver_foto || ver_foto == '') {
+                window.Swal.fire('Nada para ver!',`Selecione uma imagem clicando na opção abaixo <p> ( Foto do menbro ou no card )<p>____________________________`, 'warning')
+            } else {
+                window.open( ver_foto,'Imagem','icon=src/Profile-PNG-Images.png, height=730,width=730,autoHideMenuBar=true');
+            }
+        }
+
+    </script>
+
+    <script>
+      
+        function salvar() {
+          
+            var nome = document.getElementById('input_nome').value;
+            var senha_m = document.getElementById('input_Senha').value;
+            var Email = document.getElementById('input_email').value;
+            var select_01 = document.getElementById('select_01').value;
+            var select_02 = document.getElementById('select_02').value;
+            var input_tel = document.getElementById('input_tel').value;
+            var input_rua = document.getElementById('input_rua').value;
+            var input_numero = document.getElementById('input_numero').value;
+            var input_cidade = document.getElementById('input_cidade').value;
+            var input_bairro = document.getElementById('input_bairro').value;
+            var clube = localStorage.getItem('Clube_set_clube')
+            var data_Nasc = document.getElementById('Data').value;
+            var Foto = localStorage.getItem('add_foto_member')
+            var data = localStorage.getItem('data')
+            var hora = localStorage.getItem('hora')
+            var RG = document.getElementById('input_RG').value;
+            var CPF = document.getElementById('input_CPF').value;
+            var Ref = document.getElementById('input_Ref').value;
+
+            if(!nome || nome == '' || !senha_m || senha_m == '' || !select_01 || select_01 == ''  || input_tel == '' ||!input_tel || !input_rua || input_rua == '' || !input_numero || input_numero == '' || !input_cidade | input_cidade == '' ||!data_Nasc || data_Nasc == '' ||!input_bairro || input_bairro == ''  ) {
+                window.Swal.fire('Preencha todos os campos!','Não são opcionais: <p> Nome, Senha, Tel, Endereço completo <p>Desbravador ou Diretoria?_____________________________________ ','warning')
+            } else {        
+          const firebaseConfigure = {
+          apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+          authDomain: "sgc-regional.firebaseapp.com",
+          projectId: "sgc-regional",
+          storageBucket: "sgc-regional.appspot.com",
+          messagingSenderId: "572985076108",
+          appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+          measurementId: "G-QDG8H9S46F"
+         
+         };
+         firebase.initializeApp(firebaseConfigure);
+
+         var db = firebase.firestore()
+           
+         db.collection(`Membros_${clube}`).doc(`${nome},${senha_m}`).set({
+             Clube: clube,
+             Foto:Foto,
+             Nome:nome,
+             Senha:senha_m,
+             Email:Email,
+             Tel:input_tel,
+             Rua:input_rua,
+             Numero:input_numero,
+             Cidade: input_cidade,
+             Bairro: input_bairro,
+             Ref: Ref,
+             Categoria: select_01,
+             Função: select_02,
+             Data_NASC:data_Nasc,
+             RG: RG,
+             CPF: CPF,
+             Data: data ,
+             Hora: hora ,
+         })              
+                Swal.fire('Sucesso!',`${nome}<p> Adcionado ao clube ${clube} <p> Data: ${data} as ${hora}<p>_____________________________`,'success')
+
+                setTimeout(function(){
+                  window.location.reload()
+                },5000)
+            } 
+               
+            }
+        
+        
+            
+              
+        function limpar() {
+
+            window.localStorage.setItem('add_foto_member', '');
+              document.getElementById('input_Senha').value= '';
+            var nome = ''
+            document.getElementById('input_nome').value= ''
+            var Email =''
+             document.getElementById('input_email').value= ''
+            var select_01 =''
+             document.getElementById('select_01').value= ''
+            var select_02 = ''
+            document.getElementById('select_02').value= ''
+            var input_tel = ''
+            document.getElementById('input_tel').value= ''
+            var input_rua = ''
+             document.getElementById('input_rua').value= ''
+            var input_numero = ''
+            document.getElementById('input_numero').value= ''
+            var input_cidade = ''
+             document.getElementById('input_cidade').value= ''
+            var RG = ''
+             document.getElementById('input_RG').value= ''
+            var CPF = '' 
+            document.getElementById('input_CPF').value= ''
+            var clube = ''
+            var data_Nasc = ''
+            document.getElementById('Data').value= ''
+            var Foto = ''
+            document.getElementById('img_foto').src= '../src/Profile-PNG-Images.png'
+             document.getElementById('myProgress').style.display = 'none'
+             
+
+        };
+
+    </script>
+    <script>
+        setInterval(function() {
+        
+ const newDate = new Date()
+ var dia = String(newDate.getDate()).padStart(2, '0');
+ var mes = String(newDate.getMonth() + 1).padStart(2, '0');
+ var ano = String(newDate.getFullYear()).padStart(2, '0')
+ var data = `${dia}/${mes}/${ano}`
+ const now = new Date();
+ const hours = now.getHours().toString().padStart(2, '0');
+ const minutes = now.getMinutes().toString().padStart(2, '0');
+ const seconds = now.getSeconds().toString().padStart(2, '0');
+ const timeString = `${hours}:${minutes}:${seconds}`;
+// const lbl_data = document.getElementById('lbl-data');
+
+ // lbl_data.innerHTML = `${data}`
+
+ localStorage.setItem('data', data)
+ localStorage.setItem('hora', timeString)
+
+var Data = document.getElementById('lbl_data_head')
+Data.innerHTML= data;
+var Horario = document.getElementById('lbl_hora_head')
+Horario.innerHTML= timeString
+
+}, 1000)
+</script>
+
+</body>
+</html>

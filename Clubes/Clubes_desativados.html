@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clubes "Desativados".</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://kit.fontawesome.com/60de48ee9a.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  
+    
+    <style>
+        * {
+            margin: 0%;
+            padding: 0%;
+        }
+      #container {
+        width: 100%;
+       max-height:97vh;
+      }
+        body {
+            background-color: rgb(1, 19, 0);
+            color: rgb(255, 255, 255);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+     
+
+        #div_list_body {
+            width: 98%;
+            padding-bottom: 30px;
+            margin-top: 10px;
+            background-color: rgb(1, 19, 0);
+           
+         }
+         ul {
+            width:91% ;
+            height: 7vh;
+            margin: 0 auto;
+            margin-top: 10px;
+            border: 2px solid rgb(163, 163, 161);
+            padding: 10px;
+            background-color: rgba(255, 254, 254, 0.822);
+            overflow-y: auto;
+            margin-bottom: 10px;
+            margin-left: 5%;
+            font-size: 13px;
+            font-weight: bold;
+            padding-bottom: 10px;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: rgb(35, 35, 36);
+            margin-top: 20px;
+          
+
+         }
+         ul:hover {
+            background-color: rgba(255, 255, 255, 0.993);
+            
+         }
+         #ul_img_1 {        
+            max-width: 40px;
+            max-height: 40px;
+            cursor: pointer;
+            padding: 3px;
+            border: 1px solid beige;
+            border-radius: 7px;
+            background-color: aliceblue;
+         }
+         #ul_img_1:hover {
+            background-color: rgb(6, 165, 14);
+         }
+        
+        #ver_ls {     
+            padding: 4px;
+            border-radius: 3px;
+            border: 0cap;
+            cursor: pointer;
+            font-size: 16px;
+           margin-left: 50px;  
+           background-color: rgba(240, 248, 255, 0);    
+           color: rgb(44, 43, 43); 
+
+        }
+        #ver_ls:hover {
+            
+            color: rgb(3, 146, 3);
+        }
+       
+         #ativo {
+            padding: 5px;
+            border-radius: 50%;
+            background-color: rgb(90, 9, 3);
+            cursor: pointer;
+        }
+        #att {
+            padding: 5px;
+            border-radius: 50%;
+            background-color: rgb(253, 7, 7);
+            border: 0cap;
+            margin-right: 10px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+        #att:hover {
+            background-color: rgb(99, 2, 2);
+           
+        }
+        #label_ls {
+            font-size: 13px;
+           min-width:64% ; 
+           color: rgb(48, 49, 49);
+        }
+        ::-webkit-scrollbar {
+            width: 10px;
+            margin-left: 5px;
+            margin-top: 5px;
+            /* Largura da barra de rolagem */
+            cursor: pointer;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            margin-left: 5px;
+            background-color: rgba(2, 92, 22, 0.993);
+            /* Cor do polegar da barra de rolagem */
+            margin-top: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #div_head {
+            margin-left: 23%;
+            margin-top: 20%;
+            max-height: 40vh;
+            
+        }
+        #img_gif {
+           
+            margin-left: 30%;
+        }
+        #exc {
+            border: 0cap;
+            font-size: 16px;
+            color: rgb(41, 40, 40);
+            cursor: pointer;
+            background-color: rgba(240, 248, 255, 0);
+        }
+        #exc:hover {
+            color: rgb(252, 2, 2);
+        }
+
+    </style>
+
+</head>
+<body>
+   
+
+         <div id="container">
+      
+            <div id="div_head">
+                <h2>Nenhum clube desativado até o Momento</h2>
+                <img id="img_gif" src="../src/tssk-bttv.gif" alt="">
+            </div>
+       
+            <div id="div_list_body"></div>
+        
+    </div>
+
+  
+    <script>
+             localStorage.setItem('Logo_set_clube', '')
+               localStorage.setItem('Clube_set_clube', '')
+               localStorage.setItem('Senha_set_clube', '')
+               localStorage.setItem('Cidade_set_clube', '')
+               localStorage.setItem('Diretor_set_clube', '')
+               localStorage.setItem('Email_diretor_set_clube', '')
+               localStorage.setItem('Secretária_set_clube', '')
+               localStorage.setItem('Email_secretária_set_clube','')
+               localStorage.setItem('Data_set_clube', '')
+               localStorage.setItem('Hora_set_clube', '')
+               localStorage.setItem('Estado_clube', '')
+               localStorage.setItem('D_Desativação_set_clube', '')
+               localStorage.setItem('H_Desativação_set_clube', '')
+               localStorage.setItem('Descrição_set_clube', '')
+               localStorage.setItem('Fundado_set_clube', '')
+               localStorage.setItem('End_set_clube', '')
+               localStorage.setItem('Facebook_set_clube', '')
+               localStorage.setItem('Instagran_set_clube', '')
+               localStorage.setItem('WhatsApp_set_clube', '')
+  </script>
+    <script>
+               const userListDiv = document.getElementById('div_list_body');
+                 userListDiv.innerHTML= ''
+               const firebaseConfigure = {
+              apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+              authDomain: "sgc-regional.firebaseapp.com",
+              projectId: "sgc-regional",
+              storageBucket: "sgc-regional.appspot.com",
+              messagingSenderId: "572985076108",
+              appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+              measurementId: "G-QDG8H9S46F"
+            };
+                  // Initialize Firebase
+              firebase.initializeApp(firebaseConfigure);
+              const dbc = firebase.firestore();
+         const produtosRef = dbc.collection('Clubes_Região');
+
+          produtosRef.get().then((querySnapshot) => {
+          querySnapshot.forEach(doc => {
+
+        const user = doc.data();
+
+        if( user.Ativo == 'Ativo' ) {
+         
+
+        } else {
+            document.getElementById('div_head').style.display= 'none'
+        const button_2 = document.createElement('button');
+        const button = document.createElement('button');
+        const button_3 = document.createElement('button');
+
+       const label = document.createElement('label');
+        const userImage = document.createElement('img');
+        const li = document.createElement("ul");
+        userImage.src = ` ${user.Logo}`
+        label.textContent = `${user.Clube}  - cidade de ${user.Cidade}`;
+        userImage.id = 'ul_img_1'
+        button.id = 'att'
+        button_2.id = 'ver_ls'
+        button_3.id = 'exc'
+        button_3.className = "fa-solid fa-trash"
+         button_2.className = "fa-solid fa-eye"
+        label.id = 'label_ls'
+        button.textContent = ``;
+          button_3.textContent = ''
+        button_2.textContent = ''
+       
+      
+        li.appendChild(userImage);
+        li.appendChild(label);
+        li.appendChild(button_3);
+        li.appendChild(button_2);
+        li.appendChild(button);
+      
+        userListDiv.appendChild(li);
+      button.addEventListener("click", () => {
+        window.swal('Inativo',`Clube: ${user.Clube} - Inativo (Desativado)`,'error')
+
+              });
+
+              userImage.addEventListener('click', () =>{
+
+
+if(!user.Logo || user.Logo == ''){
+     window.swal('Atenção!',`Não há logo cadastrado parao clube "${user.Clube}"`)
+    
+} else {
+window.open(user.Logo,'Imagem','icon=src/Profile-PNG-Images.png, height=730,width=730,autoHideMenuBar=true');
+}
+});
+button_3.addEventListener("click", () => {
+    const nome_user =  localStorage.getItem('Nome_user');
+ const email_user = localStorage.getItem('Email_user'); 
+ const senha_clube = localStorage.getItem('Clubes_senha');
+ const clube_nome = localStorage.getItem('Clubes_nome_user');
+   if(!clube_nome || clube_nome !== 'Regionais') {
+    window.Swal.fire('Permissão Negada!','Você não tem permissão para adicionar ou excluir  clubes!','error')
+   } else {
+
+    showConfirm('click')
+    function showConfirm() {
+            Swal.fire({
+                title: 'Excuir Clube?',
+                text: ` A Exclusão do clube: ${user.Clube}, não poderá ser desfeita!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, deletar!',
+                cancelButtonText: 'Não, cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let dbs = firebase.firestore();
+                    dbs.collection('Clubes_Região').doc(user.Clube).delete()
+                    
+                    Swal.fire(
+
+                        'Deletado!',
+                        'O clube foi deletado.',
+                        'success'
+                    )
+                    setTimeout(function() {
+                              
+                              window.location.reload()
+                          }, 3000)
+                      
+                    
+                }
+            })
+        }
+    }
+});
+  
+
+      button_2.addEventListener("click", () => {
+// Aqui você pode fazer algo quando o item for clicado
+localStorage.setItem('Clube_click', user.Clube)
+showConfirm('click')
+
+    function showConfirm() {
+            Swal.fire({
+                title: `Ver Mais?`,
+                text: `Detalhes da desativação do clube ${user.Clube}`,
+                icon: 'fa-solid fa-trash',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, Ver !',
+                cancelButtonText: 'Não, cancelar'
+            }).then((result) => {
+               
+                if (result.isConfirmed) {
+                    
+                       
+   
+  var dbcc = firebase.firestore()
+
+  dbcc.collection('Clubes_Região').doc(user.Clube).get().then(function(doc) {
+
+if (doc.exists) {
+
+  const dados = doc.data()
+  const key = doc.dados
+
+ var Logo= dados.Logo;
+ var Clube= dados.Clube;
+ var Senha= dados.Senha;
+ var Cidade= dados.Cidade;
+ var Diretor= dados.Diretor;
+ var Email_diretor= dados.Email_diretor;
+ var Secretária= dados.Secretária;
+ var Email_secretária= dados.Email_secretária;
+ var Data= dados.Data;
+ var Hora= dados.Hora;
+ var Ativo= dados.Ativo;
+ var Data_desativação= dados.Data_desativação;
+ var Hora_desativação= dados.Hora_desativação;
+ var Descrição= dados.Descrição;
+ var Fundado= dados.Fundado;
+ var End= dados.End;
+ var Facebook_Url= dados.Foto;
+ var Instagran_Url= dados.Instagran_Url;
+ var WhatsApp= dados.WhatsApp;
+
+ localStorage.setItem('Logo_set_clube', dados.Logo)
+ localStorage.setItem('Clube_set_clube', dados.Clube)
+ localStorage.setItem('Senha_set_clube', dados.Senha)
+ localStorage.setItem('Cidade_set_clube', dados.Cidade)
+ localStorage.setItem('Diretor_set_clube', dados.Diretor)
+ localStorage.setItem('Email_diretor_set_clube', dados.Email_diretor)
+ localStorage.setItem('Secretária_set_clube', dados.Secretária)
+ localStorage.setItem('Email_secretária_set_clube', dados.Email_secretária)
+ localStorage.setItem('Data_set_clube', dados.Data)
+ localStorage.setItem('Hora_set_clube', dados.Hora)
+ localStorage.setItem('Estado_clube', dados.Ativo)
+ localStorage.setItem('D_Desativação_set_clube', dados.Data_desativação)
+ localStorage.setItem('H_Desativação_set_clube', dados.Hora_desativação)
+ localStorage.setItem('Descrição_set_clube', dados.Descrição)
+ localStorage.setItem('Fundado_set_clube', dados.Fundado)
+ localStorage.setItem('End_set_clube', dados.End)
+ localStorage.setItem('Facebook_set_clube', dados.Facebook_Url)
+ localStorage.setItem('Instagran_set_clube', dados.Instagran_Url)
+ localStorage.setItem('WhatsApp_set_clube', dados.WhatsApp)
+
+ const nome_user =  localStorage.getItem('Nome_user');
+ const email_user = localStorage.getItem('Email_user'); 
+ const senha_clube = localStorage.getItem('Clubes_senha');
+ const clube_nome = localStorage.getItem('Clubes_nome_user');
+   if(!clube_nome || clube_nome !== 'Regionais') {
+
+    window.swal('Data e hora da desetivação.',`Clube ${dados.Clube} está ${dados.Ativo} desde ${Data_desativação} as ${Hora_desativação}`)
+
+   } else if(clube_nome == 'Regionais') {
+    showConfirm('click')
+    function showConfirm() {
+            Swal.fire({
+                title: `Reativar?`,
+                text: `Clube ${dados.Clube} está ${dados.Ativo} desde ${Data_desativação} as ${Hora_desativação}`,
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, Reativar !',
+                cancelButtonText: 'Não, cancelar'
+            }).then((result) => {
+               
+                if (result.isConfirmed) {
+                    
+                        window.open('../Clubes/Edição_clube.html','_blank','icon=src/8Região.png, width=730, height=730, resizable= false, autoHideMenuBar= true')
+                    
+                }
+            })
+        }
+
+    } else{
+
+    }
+              } else {
+                alert('ERRO')
+              }
+  
+            })  
+        }
+    })
+        }
+        })
+    }
+})
+          })
+        
+    
+    
+    </script>
+    <script>
+        setInterval(function(){
+            var reload_C_D = localStorage.getItem('reload_C_D');
+            if(!reload_C_D || reload_C_D == ''){
+
+            } else {
+                localStorage.setItem('reload_C_D','');
+                location.reload()
+
+            }
+
+        },100)
+    </script>
+    <script>
+         setInterval(function() {
+      const newDate = new Date()
+      var dia = String(newDate.getDate()).padStart(2, '0');
+      var mes = String(newDate.getMonth() + 1).padStart(2, '0');
+      var ano = String(newDate.getFullYear()).padStart(2, '0')
+      var data = `${dia}/${mes}/${ano}`
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      const timeString = `${hours}:${minutes}:${seconds}`;
+     // const lbl_data = document.getElementById('lbl-data');
+      const lbl_hora = document.getElementById('lbl-hora');
+      // lbl_data.innerHTML = `${data}`
+      lbl_hora.innerHTML = `${timeString} `
+      localStorage.setItem('data', data)
+      localStorage.setItem('hora', timeString)
+
+  }, 1000)
+    </script>
+    
+</body>
+</html>

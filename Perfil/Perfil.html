@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">Perfil</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/60de48ee9a.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <style>
+          body {
+            background-color: rgb(20, 20, 20);
+            color: rgb(255, 255, 255);
+            font-family: Arial, Helvetica, sans-serif;
+
+    }
+        
+         #div_img {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 5px solid rgba(63, 63, 63, 0.5);
+            padding-bottom: 20px;
+         }
+        #foto-perfil {
+            display: none;
+        }
+        #img_P {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            padding: 2px;
+            border: 2px solid rgba(77, 76, 76, 0.651);
+            margin-left: 20px;
+            cursor: pointer;
+        }
+        #img_P:hover {
+            background-color: rgb(15, 245, 8);
+        }
+        #button_F {
+            float: right;
+            margin-right: 50px;
+            cursor: pointer;
+            padding: 7px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(37, 37, 37, 0.705);
+        }
+        #button_F:hover {
+            background-color: rgb(8, 209, 58);
+            color: red;
+            border: 2px solid rgba(133, 3, 3, 0.829);
+
+        }
+        #myProgress {
+            width: 90%;
+            background-color:rgb(78, 77, 80);
+            display: none;
+            border-radius: 10px;
+            margin-left: 20px;
+        }
+        
+        #myBar {
+            width: 1%;
+            /* Começa com 1% */
+            height: 14px;
+            background-color:rgb(34, 230, 8);
+            text-align: center;
+            /* Centraliza horizontalmente */
+            line-height: 15px;
+            /* Centraliza verticalmente */
+            color: rgb(0, 0, 0);
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        #myProgress_2 {
+            width: 90%;
+            background-color:rgb(61, 60, 60);
+            display: none;
+            border-radius: 10px;
+            margin-left: 20px;
+        }
+        
+        #myBar_2 {
+            width: 1%;
+            /* Começa com 1% */
+            height: 14px;
+            background-color:rgb(14, 228, 6);
+            text-align: center;
+            /* Centraliza horizontalmente */
+            line-height: 15px;
+            /* Centraliza verticalmente */
+            color: rgb(0, 0, 0);
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        #input_tel,
+        #input_none_user {
+           width: 300px;
+           margin-left: 20px;
+           font-size: 14px;
+           padding: 10px;
+           cursor: pointer;
+           border-radius: 10px;
+           border: 1px solid rgba(36, 35, 35, 0.541);
+        }
+        #input_tel:hover,
+        #input_none_user:hover {
+            background-color: aqua;
+            color: brown;
+            border: 1px solid rgba(155, 3, 3, 0.863);
+        }
+        label:hover {
+            color: brown;
+        }
+        #button_salvar {
+            margin-top: 20px;
+            cursor: pointer;
+            padding: 7px;
+            padding-left: 30px;
+            padding-right: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(37, 37, 37, 0.705);
+            margin-left: 30px;
+        }
+        #button_salvar:hover {
+            background-color: rgb(8, 209, 58);
+            color: red;
+            border: 2px solid rgba(133, 3, 3, 0.829);
+
+        }
+        label {
+            margin-left: 20px;
+            font-size: 12px;
+           font-weight: bold;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="div_geral">
+
+   <div id="div_img" >
+        <img id="img_P" onclick="ver_foto()" src="src/Profile-PNG-Images.png" alt="">
+        <input class="foto-perfil"id="foto-perfil" type="file" accept=" Image/*" placeholder="foto"> 
+        <button id="button_F" onclick="Start_foto()" id="">Nova foto</button>
+   </div>
+   <div id="myProgress">
+    <div id="myBar">10%</div>
+</div>
+<br>
+   <div id="div_none" >
+    <label for=""> Nome: <br>
+        <input type="text" name="Digíte nome" id="input_none_user"placeholder=" Digíte nome">
+    </label>
+   </div>
+   <br>
+   <div id="div_tel" >
+     <label id="lbl-lbl-tel"> Telefone:</label><br>
+        <input type="tel" name="Digíte Tel:" id="input_tel"  placeholder=" 11 9 98888-8888">
+    </label>
+   </div>
+   <br>
+   <div id="myProgress_2">
+    <div id="myBar_2">10%</div>
+</div>
+   <Button id="button_salvar" onclick="salvar()"> Salvar</Button> 
+   <br> <br>
+    </div>
+    <script>
+   
+       
+                document.getElementById('img_P').src= ''
+             
+    </script>
+
+    <script>
+        setInterval(function() {
+
+            var bt_tel = document.getElementById('lbl-lbl-tel');
+            var telefone = document.getElementById('input_tel').value;
+
+            function format(telefone) {
+
+                const regex = /^(\d{2})(\d{4,5})(\d{4})$/;
+                const str = telefone.replace(/[^0-9]/g, ''); // Remove caracteres não numéricos
+                const result = str.replace(regex, '($1) $2-$3');
+                return result;
+            }
+            bt_tel.innerHTML = `Telefone: ${format(telefone)}`
+
+        }, )
+    </script>
+    <script>
+                                 
+           var login_User = localStorage.getItem('Email_user');
+           var Senha_RG = localStorage.getItem('Clubes_senha');
+           var Resp_Select_1 = localStorage.getItem('Resp_Select_1')    
+ 
+          const firebaseConfigs = {
+              apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+              authDomain: "sgc-regional.firebaseapp.com",
+              projectId: "sgc-regional",
+              storageBucket: "sgc-regional.appspot.com",
+              messagingSenderId: "572985076108",
+              appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+              measurementId: "G-QDG8H9S46F"
+            };
+                  // Initialize Firebase
+              firebase.initializeApp(firebaseConfigs);
+                  var db = firebase.firestore()
+          
+                  db.collection(Resp_Select_1).doc(login_User).get().then(function(doc) {
+
+              if (doc.exists) {
+              
+                  const dados = doc.data()
+                  const key = doc.dados
+              
+                  const clube_nome = dados.Clube;
+                  const nome_user = dados.Nome;
+                  const email_user = dados.Email;
+                  const Tel_user= dados.Tel;
+                  const senha_clube = dados.Senha;
+                  const End_user = dados.End;
+                  const data_user = dados.Data;
+                  const hora_user = dados.Hora;
+                  const url_foto_user = dados.Foto;          
+                  const Data_nasc_user = dados.Data_NSC;
+                  const cargo_user = dados.Cargo;
+
+                  
+                  localStorage.setItem('Clubes_nome_user', clube_nome);
+                  localStorage.setItem('Nome_user', nome_user);
+                  localStorage.setItem('Email_user', email_user);
+                  localStorage.setItem('Tel_user', Tel_user);
+                  localStorage.setItem('Clubes_senha', senha_clube);
+                  localStorage.setItem('Endereço_user', End_user);
+                  localStorage.setItem('foto_user', url_foto_user);    
+                  localStorage.setItem('Data_user', data_user);
+                  localStorage.setItem('Hora_user', hora_user);
+                  localStorage.setItem('Data_nasc', Data_nasc_user);
+                  localStorage.setItem('Cargo_user', cargo_user);
+
+   
+                document.getElementById('img_P').src= url_foto_user
+                document.getElementById('input_none_user').value= nome_user
+                document.getElementById('input_tel').value= Tel_user
+                var titulo = document.getElementById('title');
+                titulo.innerHTML= `Perfil de ${nome_user}`
+        
+                
+       
+       }})
+    
+       
+       
+         function Start_foto(){
+            var data = localStorage.getItem('data')
+      var timeString = localStorage.getItem('hora')
+      var login_User = localStorage.getItem('Email_user');
+       
+           document.querySelector('.foto-perfil').click()
+                            
+       
+       
+           const firebaseConfigs = {
+         apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+         authDomain: "sgc-regional.firebaseapp.com",
+         projectId: "sgc-regional",
+         storageBucket: "sgc-regional.appspot.com",
+         messagingSenderId: "572985076108",
+         appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+         measurementId: "G-QDG8H9S46F"
+       
+       };
+                   firebase.initializeApp(firebaseConfigs);
+    
+                
+                   var uploader = document.getElementById('uploader');
+                   var fileButton = document.getElementById('foto-perfil');
+                    document.getElementById('myProgress').style.display = 'block'
+                   fileButton.addEventListener('change', function(e) {
+                       var file = e.target.files[0];
+                       var storageRef = firebase.storage().ref('Foto_User/' + login_User);
+                       var task = storageRef.put(file);
+                       task.on('state_changed', function progress(snapshot) {
+       
+                           var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                           uploader.value = percentage;
+       
+                       }, function error(err) {
+       
+                       }, function complete() {
+       
+                           storageRef.getDownloadURL().then(function(url_imagem) {
+                                       
+       
+                        var i = 0;
+
+                        if (i == 0) {
+                            i = 1;
+                            var elem = document.getElementById("myBar");
+                            var width = 1;
+                            var id = setInterval(frame, 70);
+
+                            function frame() {
+                                if (width >= 100) {
+                                    clearInterval(id);
+                                    i = 0;
+                                    document.getElementById('img_P').src= url_imagem
+                                    localStorage.setItem('foto_user', url_imagem)
+                                 
+                    
+                                    setTimeout(function (){
+                        
+                            localStorage.setItem('Set_foto', 'set')
+                                    
+                              },1500)
+                             var login_User = localStorage.getItem('Email_user');
+                             var senha = localStorage.getItem('Clubes_senha');
+                             var Resp_Select_1 = localStorage.getItem('Resp_Select_1')    
+                             var nome_user = document.getElementById('input_none_user').value;
+                             var Tel_user =  document.getElementById('input_tel').value;
+                             var End_user = localStorage.getItem('Endereço_user');
+                             var data_user= localStorage.getItem('Data_user');
+                             var hora_user = localStorage.getItem('Hora_user');
+                             var Data_nasc_user = localStorage.getItem('Data_nasc');
+                             var cargo_user = localStorage.getItem('Cargo_user');
+                            
+                            var dbs = firebase.firestore()
+                            dbs.collection(Resp_Select_1).doc(login_User).set({
+      
+
+                                  Clube:Resp_Select_1,
+                                  Nome: nome_user,
+                                  Email: login_User,
+                                  Data: data_user,
+                                  Hora: hora_user,
+                                  Senha: senha,
+                                  Tel: Tel_user,
+                                  Foto: url_imagem,
+                                  Data_NSC: Data_nasc_user,
+                                  End: End_user,
+                                  Cargo: cargo_user,
+                      
+
+                            })
+                                } else {
+                                    width++;
+                                    elem.style.width = width + "%";
+                                    elem.innerHTML = width + "%"; // Atualiza o texto do rótulo
+                                }
+                            
+                            }
+                        }
+
+                    })
+                })
+                 })  
+            }
+                                   
+                   function salvar() {
+                    var data = localStorage.getItem('data')
+                    var timeString = localStorage.getItem('hora')
+
+                         var login_User = localStorage.getItem('Email_user');
+                             var senha = localStorage.getItem('Clubes_senha');
+                             var Resp_Select_1 = localStorage.getItem('Resp_Select_1')    ;
+                             var nome_user = document.getElementById('input_none_user').value;
+                             var Tel_user =  document.getElementById('input_tel').value;
+                             var End_user = localStorage.getItem('Endereço_user');
+                             var data_user= localStorage.getItem('Data_user');
+                             var hora_user = localStorage.getItem('Hora_user');
+                             var Data_nasc_user = localStorage.getItem('Data_nasc');
+                             var cargo_user = localStorage.getItem('Cargo_user');
+                  
+                          var url_= localStorage.getItem('foto_user')
+              
+                            var Nome=  document.getElementById('input_none_user').value;
+                           var telefone= document.getElementById('input_tel').value;
+                            localStorage.setItem('Nome_user', Nome) 
+                            localStorage.setItem('Tel_user', telefone);
+                        
+                          document.getElementById('myProgress_2').style.display = 'block'
+                             var dbt = firebase.firestore()
+                             dbt.collection(Resp_Select_1).doc(login_User).set({
+       
+                      
+                                  Clube:Resp_Select_1,
+                                  Nome: Nome,
+                                  Email: login_User,
+                                  Data: data_user,
+                                  Hora: hora_user,
+                                  Senha: senha,
+                                  Tel: telefone,
+                                  Foto: url_,
+                                  Data_NSC: Data_nasc_user,
+                                  End: End_user,
+                                  Cargo: cargo_user,
+                      
+                             })
+                             var i = 0;
+
+                              if (i == 0) {
+                                  i = 1;
+                                  var elem = document.getElementById("myBar_2");
+                                  var width = 1;
+                                  var id = setInterval(frame, 70);
+                              
+                                  function frame() {
+                                      if (width >= 100) {
+                                          clearInterval(id);
+                                          i = 0;
+                                     localStorage.setItem('Set_nome_tel', 'set')
+                                     
+                                      } else {
+                                          width++;
+                                          elem.style.width = width + "%";
+                                          elem.innerHTML = width + "%"; // Atualiza o texto do rótulo
+                                      }
+                                  }
+                              }
+                              
+                              }
+                           
+                              function ver_foto() {
+                                var url= localStorage.getItem('foto_user')
+                                window.open(url,'Imagem','icon=src/Profile-PNG-Images.png, height=730,width=730,autoHideMenuBar=true');
+                              }
+
+                            
+       </script>
+       <script>
+  function I_hora() {
+      var data = localStorage.getItem('data')
+      var timeString = localStorage.getItem('hora')
+      document.getElementById('lbl-i').style.display = 'none'
+      document.getElementById('lbl-hora').style.display = 'block'
+      var I_hora = document.getElementById('lbl-hora');
+      I_hora.innerHTML = timeString
+  }
+  function hora_data() {
+      var data = localStorage.getItem('data')
+      var timeString = localStorage.getItem('hora')
+      const lbl_hora = document.getElementById('lbl-hora');
+      const lbl_i = document.getElementById('lbl-i');
+      document.getElementById('lbl-i').style.display = 'block'
+      document.getElementById('lbl-hora').style.display = 'none'
+  }
+  setInterval(function() {
+      const newDate = new Date()
+      var dia = String(newDate.getDate()).padStart(2, '0');
+      var mes = String(newDate.getMonth() + 1).padStart(2, '0');
+      var ano = String(newDate.getFullYear()).padStart(2, '0')
+      var data = `${dia}/${mes}/${ano}`
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      const timeString = `${hours}:${minutes}:${seconds}`;
+     // const lbl_data = document.getElementById('lbl-data');
+      const lbl_hora = document.getElementById('lbl-hora');
+      // lbl_data.innerHTML = `${data}`
+      lbl_hora.innerHTML = `${timeString} `
+      localStorage.setItem('data', data)
+      localStorage.setItem('hora', timeString)
+
+  }, 1000)
+</script>
+
+
+</body>
+</html>

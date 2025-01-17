@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Clube</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/60de48ee9a.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <style>
+
+  
+  body {
+    background-color: rgb(20, 20, 20);
+    color: rgb(255, 255, 255);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  #div_geral {
+    width: 100%;
+  }
+  #logo {
+    max-width: 55px;
+    max-height: 55px;
+    padding: 5px;
+    border: 1px solid rgb(4, 139, 22);
+    background-color: rgba(110, 111, 112, 0);
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  #logo:hover {
+    background-color: rgb(12, 236, 4);
+  }
+  #h2_img {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 30px;
+  }
+ 
+  #input_clube label {
+    font-size: 12px;
+    cursor: pointer;
+    color: rgb(254, 255, 255);
+  }
+  #input_clube input {
+    width: 200px;
+    padding: 5px;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    cursor: pointer;
+    border: 1px solid bisque;
+    border-radius: 3px;
+  }
+  #input_clube {
+   
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-bottom: 40px;
+    border-bottom: 5px solid rgb(105, 103, 103);
+   
+  }
+  #input_clube #input_senha_clube,
+  #input_clube #input_senha_clube_ {
+    margin-left: 20px;
+  }
+  #lbl_logo {
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  #i_logo {
+    font-size: 28px;
+    cursor: pointer;
+  }
+  #i_logo:hover,
+  #lbl_logo:hover {
+    color: rgb(15, 255, 7);
+  }
+
+  #div_diretores label,
+  #div_secretária label {
+    font-size: 12px;
+    cursor: pointer;
+    color: rgb(254, 255, 255);
+  }
+  #div_diretores input,
+  #div_secretária input {
+    width: 200px;
+    padding: 5px;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    cursor: pointer;
+    border: 1px solid bisque;
+    border-radius: 3px;
+  }
+  #div_diretores,
+  #div_secretária {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-bottom: 30px;
+    border-bottom: 5px solid rgb(105, 103, 103);
+    margin-top: 20px;
+  }
+  #div_diretores  #lbl_senha_acesso_C,
+  #div_secretária #lbl_senha_acesso_C_2{
+    font-size: 18px;
+    font-weight: bold;
+  }
+  #h3_diretores,
+  #h3_secretárias {
+    margin-left: 40px;
+  }
+  #input_clube input:hover,
+  #div_diretores input:hover,
+  #div_secretária input:hover {
+    background-color: rgb(4, 170, 32);
+    color: rgb(122, 4, 4);
+  }
+  #lbl_limpar {
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    padding: 5px;
+  }
+  #lbl_limpar:hover {
+    color: rgb(177, 3, 32);
+    background-color: rgb(205, 207, 209);
+    
+  }
+  #div_button {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 40px;
+  }
+  #btn_start {
+    background-color: rgba(83, 85, 85, 0.726);
+    border: 2px solid rgb(136, 136, 136);
+    border-radius: 4px;
+    width: 200px;
+    padding: 7px;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: rgb(253, 254, 255);
+    cursor: pointer;
+  }
+  #btn_start:hover {
+    background-color: rgb(3, 124, 3);
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+  }
+  #logo_clube {
+    display: none;
+  }
+  #myProgress {
+            width: 30%;
+            background-color:rgb(122, 120, 120);
+            display: none;
+            border-radius: 10px;
+            margin-left: 50%;
+        }
+        
+        #myBar {
+            width: 1%;
+            /* Começa com 1% */
+            height: 16px;
+            background-color:rgb(117, 233, 9);
+            text-align: center;
+            /* Centraliza horizontalmente */
+            line-height: 15px;
+            /* Centraliza verticalmente */
+            color: rgb(61, 59, 59);
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        #myProgress_ {
+            width: 50%;
+            background-color:rgb(122, 120, 120);
+            display: none;
+            border-radius: 10px;
+            margin-left: 25%;
+            margin-top: 10px;
+        }
+        
+        #myBar_ {
+            width: 1%;
+            /* Começa com 1% */
+            height: 16px;
+            background-color:rgb(117, 233, 9);
+            text-align: center;
+            /* Centraliza horizontalmente */
+            line-height: 15px;
+            /* Centraliza verticalmente */
+            color: rgb(61, 59, 59);
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        p {
+          font-size: 11px;
+          width: 80%;
+          margin-left:10%;
+          
+        }
+
+
+    </style>
+</head>
+<body>
+
+ 
+
+
+    <div id="div_geral">
+        <div id="h2_img">
+        <h2 id="h_02"> Novo Clube</h2>
+        <img id="logo" src="../src/8Região.png" alt="" onclick="ver_foto() "> <label id="lbl_logo" for="" onclick="logo_foto()">Logo <i id="i_logo" class="fa-regular fa-file-image"></i> </label>
+      
+        <input type="file" id="logo_clube" placeholder="logo">
+    </div>
+    <div id="myProgress">
+      <div id="myBar">10%</div>
+  </div>
+    <br>
+        <div id="input_clube">
+            
+            <div>
+          <label for="">Nome do clube 
+            <input type="text" id="input_nome_clube" placeholder="Digíte nome clube...">
+          </label>
+        </div>
+        <div>
+        <label id="input_senha_clube_" for="">Senha de acesso ao clube 
+            <input type="text" id="input_senha_clube" placeholder="Senha do clube...">
+        </label>
+        </div>
+        <div>
+        <label for="">Cidade do clube 
+            <input type="text" id="input_cidade_clube" placeholder="Digíte Cidade...">
+        </label>
+        </div>
+
+        </div>
+          <h3 id="h3_diretores"> Diretor</h3>
+        <div id="div_diretores">
+
+            <div>
+                <label for="">Nome do Diretor
+                  <input type="text" id="input_nome_Diretor" placeholder="Digíte nome Diretor...">
+                </label>
+              </div>
+              <div>
+                <label for="">Email do Diretor 
+                  <input type="email" id="input_email_diretor" placeholder="Digíte email Diretor...">
+                </label>
+              </div>
+              <div>
+                <label  for="">Senha de acesso ao clube <label id="lbl_senha_acesso_C" for=""> 00000</label> </label>
+              </div>
+        </div>
+        <h3 id="h3_secretárias"> Secretária</h3>
+        <div id="div_secretária">
+
+            <div>
+                <label for="">Nome da Secretária
+                  <input type="text" id="input_nome_Secretária" placeholder="Digíte nome Secretária...">
+                </label>
+              </div>
+              <div>
+                <label for="">Email da Secretária
+                  <input type="email" id="input_email_secretária" placeholder="Digíte email secretária...">
+                </label>
+              </div>
+              <div>
+                <label  for="">Senha de acesso ao clube <label id="lbl_senha_acesso_C_2" for=""> 00000</label> </label>
+           
+        </div>
+      </div>
+      <p> Caso não tenha um nome para diretor ou secretária, preencha os campos com um sinal de ? ou #. Em seguida você podera salvar o Cadastro</p>
+      <div id="myProgress_">
+        <div id="myBar_">10%</div>
+    </div>
+        <div id="div_button">
+            <button id="btn_start" onclick="start()">Salvar cadastro</button> <label id="lbl_limpar" for="" onclick="limpar_c()">Limpar campos</label>
+        </div>
+
+    </div>
+    <script>
+         localStorage.setItem('logo_novo_clube', '')
+         localStorage.setItem('login_DIR', '')
+         localStorage.setItem('login_SEC', '')
+
+          var nome_clube= localStorage.getItem('Clube_set_clube')
+
+            const firebaseConfig = {
+             apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+             authDomain: "sgc-regional.firebaseapp.com",
+             projectId: "sgc-regional",
+             storageBucket: "sgc-regional.appspot.com",
+             messagingSenderId: "572985076108",
+             appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+             measurementId: "G-QDG8H9S46F"
+           
+           };
+            firebase.initializeApp(firebaseConfig);
+
+          var dbc = firebase.firestore()
+       
+       dbc.collection('Clubes_Região').doc(nome_clube).get().then(function(doc) {
+
+   if (doc.exists) {
+   
+       const dados = doc.data()
+       const key = doc.dados
+
+      var Logo= dados.Logo;
+      var Clube= dados.Clube;
+      var Senha= dados.Senha;
+      var Cidade= dados.Cidade;
+      var Diretor= dados.Diretor;
+      var Email_diretor= dados.Email_diretor;
+      var Secretária= dados.Secretária;
+      var Email_secretária= dados.Email_secretária;
+      var Data= dados.Data;
+      var Hora= dados.Hora;
+      var Ativo= dados.Ativo;
+      var Data_desativação= dados.Data_desativação;
+      var Hora_desativação= dados.Hora_desativação;
+      var Descrição= dados.Descrição;
+      var Fundado= dados.Fundado;
+      var End= dados.End;
+      var Facebook_Url= dados.Foto;
+      var Instagran_Url= dados.Instagran_Url;
+      var WhatsApp= dados.WhatsApp;
+
+      localStorage.setItem('Logo_set_clube', dados.Logo)
+      localStorage.setItem('Clube_set_clube', dados.Clube)
+      localStorage.setItem('Senha_set_clube', dados.Senha)
+      localStorage.setItem('Cidade_set_clube', dados.Cidade)
+      localStorage.setItem('Diretor_set_clube', dados.Diretor)
+      localStorage.setItem('Email_diretor_set_clube', dados.Email_diretor)
+      localStorage.setItem('Secretária_set_clube', dados.Secretária)
+      localStorage.setItem('Email_secretária_set_clube', dados.Email_secretária)
+      localStorage.setItem('Data_set_clube', dados.Data)
+      localStorage.setItem('Hora_set_clube', dados.Hora)
+      localStorage.setItem('Estado_clube', dados.Ativo)
+      localStorage.setItem('D_Desativação_set_clube', dados.Data_desativação)
+      localStorage.setItem('H_Desativação_set_clube', dados.Hora_desativação)
+      localStorage.setItem('Descrição_set_clube', dados.Descrição)
+      localStorage.setItem('Fundado_set_clube', dados.Fundado)
+      localStorage.setItem('End_set_clube', dados.End)
+      localStorage.setItem('Facebook_set_clube', dados.Facebook_Url)
+      localStorage.setItem('Instagran_set_clube', dados.Instagran_Url)
+      localStorage.setItem('WhatsApp_set_clube', dados.WhatsApp)
+  
+       
+         document.getElementById('input_email_diretor').value= Email_diretor;
+         document.getElementById('input_email_secretária').value= Email_secretária;
+         document.getElementById('input_nome_clube').value= Clube;
+         document.getElementById('input_senha_clube').value= Senha;
+         document.getElementById('input_cidade_clube').value= Cidade;
+         document.getElementById('logo').src = Logo
+         localStorage.setItem('logo_novo_clube', Logo)
+         localStorage.setItem('login_DIR', Email_diretor)
+         localStorage.setItem('login_SEC', Email_secretária)
+      
+   
+   }
+})
+setTimeout( function() {
+
+
+  var login_DIR = localStorage.getItem('login_DIR')
+
+  var dbu = firebase.firestore()   
+       dbu.collection('Diretores').doc(login_DIR).get().then(function(doc) {
+
+   if (doc.exists) {
+   
+       const user = doc.data()
+       const key = doc.dados
+
+
+        localStorage.setItem('Endereço_D_C', user.End);
+        localStorage.setItem('foto_D_C', user.Foto);    
+        localStorage.setItem('Data_D_C', user. Data);
+        localStorage.setItem('Hora_D_C', user.Hora);
+        localStorage.setItem('Data_D_C_C', user.Data_NSC);
+        localStorage.setItem('Cargo_D_C', user.Cargo);
+        localStorage.setItem('Tel_D_C', user.Tel); 
+        localStorage.setItem('Email_D_C', user.Email);   
+        document.getElementById('input_nome_Diretor').value= user.Nome;
+   }
+ 
+   })
+   
+   var login_SEC = localStorage.getItem('login_SEC')
+
+
+   var dbus = firebase.firestore()
+       
+       dbus.collection('Secretária').doc(login_SEC).get().then(function(doc) {
+
+   if (doc.exists) {
+   
+       const users = doc.data()
+       const key = doc.dados
+
+
+        localStorage.setItem('Endereço_S_C', users.End);
+        localStorage.setItem('foto_S_C', users.Foto);    
+        localStorage.setItem('Data_S_C', users. Data);
+        localStorage.setItem('Hora_S_C', users.Hora);
+        localStorage.setItem('Data_S_C_C', users.Data_NSC);
+        localStorage.setItem('Cargo_S_C', users.Cargo);
+        localStorage.setItem('Tel_S_C', users.Tel);   
+        localStorage.setItem('Email_S_C', users.Email); 
+        document.getElementById('input_nome_Secretária').value= users.Nome;
+
+   }
+   })
+
+
+},2000)
+
+    </script>
+    
+ <script>
+   
+          function ver_foto() {
+            var url= localStorage.getItem('logo_novo_clube')
+            if(!url || url == '') {
+            var img_log= '../src/8Região.png'
+            localStorage.setItem('logo_novo_clube', img_log)
+            window.open(img_log,'Imagem','icon=src/Profile-PNG-Images.png, height=730,width=730,autoHideMenuBar=true');
+            } else {
+                window.open(url,'Imagem','icon=src/Profile-PNG-Images.png, height=730,width=730,autoHideMenuBar=true');
+            }
+        
+         };
+
+          function limpar_c() {
+            document.getElementById('input_nome_clube').value= ''
+            document.getElementById('input_senha_clube').value= ''
+            document.getElementById('input_cidade_clube').value= ''
+            document.getElementById('input_nome_Diretor').value= ''
+            document.getElementById('input_email_diretor').value= ''
+            document.getElementById('input_nome_Secretária').value= ''
+            document.getElementById('input_email_secretária').value= ''
+            
+            var h2 = document.getElementById('h_02');
+            var senha_resp = document.getElementById('lbl_senha_acesso_C');
+            var senha_resp_2 = document.getElementById('lbl_senha_acesso_C_2');
+            h2.innerHTML= "Novo Clube";
+            senha_resp.innerHTML= "0000";
+            senha_resp_2.innerHTML= "0000";
+
+          }
+           setInterval(function() {
+            var h2 = document.getElementById('h_02');
+            var resp_01= document.getElementById('input_nome_clube').value;
+            if( !resp_01 || resp_01 == ''){
+                h2.innerHTML= "Novo Clube";
+                senha_resp.innerHTML= "0000";
+
+            } else{
+                h2.innerHTML= resp_01;
+            }
+              
+           },100);
+
+           setInterval(function() {
+            var senha_resp = document.getElementById('lbl_senha_acesso_C');
+            var senha_resp_2 = document.getElementById('lbl_senha_acesso_C_2');
+            var resp_02= document.getElementById('input_senha_clube').value;
+            if( !resp_02 || resp_02 == ''){
+                senha_resp.innerHTML= "0000";
+                senha_resp_2.innerHTML= "0000";
+
+            } else{
+                senha_resp.innerHTML= resp_02;
+                senha_resp_2.innerHTML= resp_02;
+            }
+              
+           },100);
+
+    </script>
+    <script>
+
+        function logo_foto() {
+
+            var resp_3 = document.getElementById('input_nome_clube').value;
+            var resp_4= document.getElementById('input_senha_clube').value;
+            var resp_5= document.getElementById('input_cidade_clube').value;
+            if(!resp_3 || resp_3 == '' ||!resp_4 || resp_4 == '' ||!resp_5 || resp_5 == '') {
+
+                window.swal( 'Atenção!', 'Antes de escolher o logo do clube, preencha os campos:\n\n(Nome do Clube) , (Senha de acesso) e (Cidade do clube)','warning')
+            } else {
+
+              
+                document.getElementById('logo_clube').click()
+
+            const firebaseConfig = {
+             apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+             authDomain: "sgc-regional.firebaseapp.com",
+             projectId: "sgc-regional",
+             storageBucket: "sgc-regional.appspot.com",
+             messagingSenderId: "572985076108",
+             appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+             measurementId: "G-QDG8H9S46F"
+           
+           };
+            firebase.initializeApp(firebaseConfig);
+
+            var uploader = document.getElementById('uploader ');
+            var fileButton = document.getElementById('logo_clube');
+            
+            fileButton.addEventListener('change', function(e) {
+                var file = e.target.files[0];
+                var storageRef = firebase.storage().ref('Log_Club/' + resp_3);
+                var task = storageRef.put(file);
+                task.on('state_changed', function progress(snapshot) {
+
+                    var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    uploader.value = percentage;
+
+                }, function error(err) {
+
+                }, function complete() {
+
+                    storageRef.getDownloadURL().then(function(url_imagem) {
+                 
+                        document.getElementById('myProgress').style.display = 'block'
+                        var i = 0;
+
+                        if (i == 0) {
+                            i = 1;
+                            var elem = document.getElementById("myBar");
+                            var width = 1;
+                            var id = setInterval(frame, 30);
+
+                            function frame() {
+                                if (width >= 100) {
+                                    clearInterval(id);
+                                    i = 0;
+                                   
+                                    window.localStorage.setItem('logo_novo_clube', url_imagem);
+                                    
+                                    document.getElementById('logo').src = url_imagem
+
+                                } else {
+                                    width++;
+                                    elem.style.width = width + "%";
+                                    elem.innerHTML = width + "%"; // Atualiza o texto do rótulo
+                                }
+                            }
+                        }
+
+                    })
+                })
+            })
+            
+          }}
+
+            function start() {
+                
+                var data = localStorage.getItem('data')
+              var timeString = localStorage.getItem('hora')
+              var diretor = document.getElementById('input_nome_Diretor').value;
+              var Email_diretor = document.getElementById('input_email_diretor').value;
+              var Secretária = document.getElementById('input_nome_Secretária').value;
+              var Email_secretária= document.getElementById('input_email_secretária').value;
+              var logo = localStorage.getItem('logo_novo_clube');
+              var resp_3= document.getElementById('input_nome_clube').value;
+            var resp_4= document.getElementById('input_senha_clube').value;
+            var resp_5= document.getElementById('input_cidade_clube').value;
+               // localStorage.setItem('Logo_set_clube', dados.Logo)
+              // localStorage.setItem('Clube_set_clube', dados.Clube)
+              //  localStorage.setItem('Senha_set_clube', dados.Senha)
+             //   localStorage.setItem('Cidade_set_clube', dados.Cidade)
+             //   localStorage.setItem('Diretor_set_clube', dados.Diretor)
+              //  localStorage.setItem('Email_diretor_set_clube', dados.Email_diretor)
+              //  localStorage.setItem('Secretária_set_clube', dados.Secretária)
+             //   localStorage.setItem('Email_secretária_set_clube', dados.Email_secretária)
+
+             var Data_ANT= localStorage.getItem('Data_set_clube')
+             var Hora_ANT= localStorage.getItem('Hora_set_clube')
+             var Ativo= localStorage.getItem('Estado_clube')
+             var desativado_D=  localStorage.getItem('D_Desativação_set_clube')
+             var desativado_H= localStorage.getItem('H_Desativação_set_clube')
+             var descrição= localStorage.getItem('Descrição_set_clube')
+             var fundado= localStorage.getItem('Fundado_set_clube')
+             var end= localStorage.getItem('End_set_clube')
+             var facebook= localStorage.getItem('Facebook_set_clube')
+             var instagran= localStorage.getItem('Instagran_set_clube')
+             var whatsApp= localStorage.getItem('WhatsApp_set_clube')
+
+              //Diretores
+           
+                var email_d_c = localStorage.getItem('Email_D_C');   
+
+                if(Email_diretor == email_d_c) {
+                    var Tel= localStorage.getItem('Tel_D_C');        
+                var end_user= localStorage.getItem('Endereço_D_C');
+                var foto_user= localStorage.getItem('foto_D_C');    
+                var data_user=  localStorage.getItem('Data_D_C');
+                var hora_user=  localStorage.getItem('Hora_D_C');
+                var D_nasc = localStorage.getItem('Data_D_C_C');
+                var Cargo_user= localStorage.getItem('Cargo_D_C');
+                
+
+                } else {
+                 var Tel= '';        
+                var end_user= '';
+                var foto_user= 'src/Profile-PNG-Images.png';    
+                var data_user=  '';
+                var hora_user=  '';
+                var D_nasc = '';
+                var Cargo_user= 'Diretor';
+         
+
+                }
+
+                //secretárias
+    
+              var email_s_c = localStorage.getItem('Email_S_C');   
+
+               if(Email_secretária == email_s_c) {
+               
+              var Tel_2= localStorage.getItem('Tel_S_C');          
+              var end_user_2= localStorage.getItem('Endereço_S_C');
+              var foto_user_2= localStorage.getItem('foto_S_C');    
+              var data_user_2=  localStorage.getItem('Data_S_C');
+              var hora_user_2=  localStorage.getItem('Hora_S_C');
+              var D_nasc_2 = localStorage.getItem('Data_S_C_C');
+              var Cargo_user_2= localStorage.getItem('Cargo_S_C');     
+      
+               
+               } else {
+                var Tel_2= '';        
+               var end_user_2= '';
+               var foto_user_2= 'src/Profile-PNG-Images.png';    
+               var data_user_2=  '';
+               var hora_user_2=  '';
+               var D_nasc_2 = '';
+               var Cargo_user_2= 'Secretária';
+               
+               
+               }
+          
+                
+             
+            if(!resp_3 || resp_3 == '' ||!resp_4 || resp_4 == '' ||!resp_5 || resp_5 == '') {
+
+                window.swal('Atenção!','Preencha os campos:\n\n (Nome do Clube) , (Senha de acesso) e (Cidade do clube).\n\n  Obs: Caso não tenha um nome para diretor ou secretária, preencha os campos com o sinal de ( ? ) .  Em seguida você podera salvar o Cadastro.','warning')
+            } else {
+
+             const firebaseConfigs = {
+            apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+            authDomain: "sgc-regional.firebaseapp.com",
+            projectId: "sgc-regional",
+            storageBucket: "sgc-regional.appspot.com",
+            messagingSenderId: "572985076108",
+            appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+            measurementId: "G-QDG8H9S46F"
+          };
+
+        firebase.initializeApp(firebaseConfigs);
+        
+            let db = firebase.firestore();
+
+              db.collection('Clubes_Região').doc(resp_3).set({
+              
+                 
+                 Logo: logo,
+                 Clube: resp_3,
+                 Senha: resp_4,
+                 Cidade: resp_5,
+                 Diretor: diretor,
+                 Email_diretor: Email_diretor,
+                 Secretária: Secretária,
+                 Email_secretária: Email_secretária,
+                 Data: `${Data_ANT} _ ${data} `,
+                 Hora: `${Hora_ANT} _ ${timeString}`,
+                 Ativo: Ativo,
+                 Data_desativação: desativado_D,
+                 Hora_desativação: desativado_H,
+                 Descrição: descrição,
+                 Fundado: fundado,
+                 End: end,
+                 Facebook_Url: facebook,
+                 Instagran_Url: instagran,
+                 WhatsApp: whatsApp,
+                 
+              
+              
+              })
+              let dbd = firebase.firestore();
+
+             dbd.collection('Diretores').doc(Email_diretor).set({
+             
+                
+                Foto: foto_user,
+                Clube: resp_3,
+                Senha: resp_4,
+                Email: Email_diretor,
+                Nome: diretor,
+                Data: `${data_user} _ ${data} `,
+                Hora: `${hora_user} _ ${timeString}`,
+                Cargo:'Diretor',
+                End:end_user,
+                Data_NSC: D_nasc,
+                Tel: Tel,
+               
+             
+             })
+
+             let dbs = firebase.firestore();
+
+             dbs.collection('Secretária').doc(Email_secretária).set({
+             
+                
+                Foto: foto_user_2,
+                Clube: resp_3,
+                Senha: resp_4,
+                Email: Email_secretária,
+                Nome: Secretária,
+                Data: `${data_user_2} _ ${data} `,
+                Hora: `${hora_user_2} _ ${timeString}`,
+                Cargo:'Secretária',
+                End: end_user_2,
+                Data_NSC: D_nasc_2,
+                Tel: Tel_2,
+             
+             
+             })
+             document.getElementById('myProgress_').style.display = 'block'
+                        var i = 0;
+
+                        if (i == 0) {
+                            i = 1;
+                            var elem = document.getElementById("myBar_");
+                            var width = 1;
+                            var id = setInterval(frame, 30);
+
+                            function frame() {
+                                if (width >= 100) {
+                                    clearInterval(id);
+                                    i = 0;
+                                   
+                             window.swal('Sucesso!')
+                            window.location.reload()
+
+
+                                } else {
+                                    width++;
+                                    elem.style.width = width + "%";
+                                    elem.innerHTML = width + "%"; // Atualiza o texto do rótulo
+                                }
+                            }
+                        }
+                 }
+            }
+              
+    </script>
+    <script>
+                  setInterval(function() {
+          
+          const newDate = new Date()
+          var dia = String(newDate.getDate()).padStart(2, '0');
+          var mes = String(newDate.getMonth() + 1).padStart(2, '0');
+          var ano = String(newDate.getFullYear()).padStart(2, '0')
+          var data = `${dia}/${mes}/${ano}`
+          const now = new Date();
+          const hours = now.getHours().toString().padStart(2, '0');
+          const minutes = now.getMinutes().toString().padStart(2, '0');
+          const seconds = now.getSeconds().toString().padStart(2, '0');
+          const timeString = `${hours}:${minutes}:${seconds}`;
+          // const lbl_data = document.getElementById('lbl-data'
+          localStorage.setItem('data', data)
+          localStorage.setItem('hora', timeString)
+          
+          }, 1000)
+
+    </script>
+
+
+</body>
+</html>

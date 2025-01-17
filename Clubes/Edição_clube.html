@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">Edição do clube</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/60de48ee9a.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <style>
+        *{
+            margin: 0%;
+            padding: 0%;
+        }
+         body {
+     background-color: rgb(40, 52, 56);
+    color: rgb(255, 255, 255);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  #div_display_regionais {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  #div_btn_regionais {
+    width: 96%;
+    height: 24vh;
+    background-color: rgb(78, 3, 56);
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    padding-top: 10px;
+    border-bottom: 3px solid rgb(228, 228, 216);
+    display: none;
+  }
+  #h2_regionais {  
+    margin-bottom: 20px;
+    font-size: 16px;
+    margin-left: 10px;
+    color: rgb(255, 255, 255);
+  }
+  #h2_estado_clube {
+    margin-bottom: 10px;
+    font-size: 16px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+
+  }
+  #div_display_regionais {
+    margin-bottom: 10px;
+    border-bottom: 3px solid rgba(134, 102, 129, 0.726);
+    padding-bottom: 20px;
+   
+   
+  }
+  #div_display_regionais label {
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: rgba(14, 13, 13, 0.514);
+  }
+  #div_display_regionais label:hover {
+    background-color: rgb(24, 248, 4);
+    color: brown;
+    border: 1px solid rgb(151, 48, 48);
+  }
+  #div_check_R #lbl_check_01,
+  #div_check_R #lbl_check_02 { 
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  }
+  #check_R_01,
+  #check_R_02 {
+    color: rgb(67, 223, 5);
+    cursor: pointer;
+    margin-right: 40px;
+  
+  }
+  #div_check_R #lbl_check_01:hover {
+    color: rgb(5, 243, 24);
+   
+  } 
+
+  #div_check_R #lbl_check_02:hover {
+    color: rgb(255, 1, 43);
+
+  }
+           #myProgress_ {
+            width: 40%;
+            background-color:rgb(122, 120, 120);
+            display: none;
+            border-radius: 10px;
+            margin-left: 3%;
+            margin-top: 10px;
+        }
+        
+        #myBar_ {
+            width: 1%;
+            /* Começa com 1% */
+            height: 16px;
+            background-color:rgb(117, 233, 9);
+            text-align: center;
+            /* Centraliza horizontalmente */
+            line-height: 15px;
+            /* Centraliza verticalmente */
+            color: rgb(61, 59, 59);
+            border-radius: 5px;
+            font-weight: bold;
+        }
+   
+
+        #only {
+          width: 10px;
+          height: 10px;
+          padding: 7px;
+          border-radius: 50%;
+          background-color: aliceblue;
+          margin-left: 5px;
+          border: 0cap;
+        
+        }
+        #myProgress {
+            width: 40%;
+            background-color:rgb(122, 120, 120);
+            display: none;
+            border-radius: 10px;
+            margin-left: 3%;
+            margin-top: 10px;
+        }
+        
+        #myBar {
+            width: 1%;
+            /* Começa com 1% */
+            height: 16px;
+            background-color:rgb(245, 5, 5);
+            text-align: center;
+            /* Centraliza horizontalmente */
+            line-height: 15px;
+            /* Centraliza verticalmente */
+            color: rgb(255, 250, 250);
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        #div_diretores {
+          width: 98%;
+         max-height: 90vh;
+         min-height: 69vh ;
+         background-color: rgb(40, 52, 56);
+         color: rgb(255, 254, 254);
+         
+         
+        }
+        #h3 {
+          margin-left: 20px;
+          font-size: 16px;
+          padding-top: 10px;
+        }
+        .checked {
+         
+          font-size: 20px;
+          accent-color:  rgb(51, 236, 4);
+        }
+        .checked_2 {
+          accent-color: rgb(238, 4, 4);
+        }
+        #img {
+          max-width: 64px;
+          max-height: 64px;
+          padding: 3px;
+          border: 2px solid beige;
+          border-radius: 4px;
+          float: right;
+          margin-right: 50px;
+          cursor: pointer;
+          background-color: aliceblue;
+
+        
+        }
+        #img:hover {
+          background-color: aqua;
+        }
+        #div_diretores {
+          padding: 1%;
+        }
+    
+        #div_D_02 {
+          width: 64%;
+          margin-top: 20px;
+          display: flex;
+         align-items: center;
+         justify-content: space-between;
+        
+         
+        
+        }
+        #div_D_02 button {
+          width: 100%;
+          padding: 7px;
+          margin-bottom: 15px;
+          background-color: rgba(240, 248, 255, 0);
+          color: aliceblue;
+          margin-left: 20px;
+          border: 0cap;
+          border: 2px solid rgba(245, 245, 220, 0.486);
+          cursor: pointer;
+          font-weight: bold;
+          border-radius: 5px;
+          padding-left: 40px;
+          padding-right: 40px;          
+          
+        }
+        #div_D_02 i {
+          font-size: 12px;
+          cursor: pointer;
+          font-weight: bold;
+         
+        }
+        #div_D_02 button:hover {
+          color: rgb(78, 3, 56);
+          background-color: rgb(6, 243, 17);
+          border: 2px solid forestgreen;
+          
+        }
+        #FILES {
+          display: none;
+        }
+        #myProgress_3 {
+            width: 30%;
+            background-color:rgb(122, 120, 120);
+            display: none;
+            border-radius: 10px;
+            margin-left: 50%;
+            margin-top: 10px;
+        }
+        
+        #myBar_3 {
+            width: 1%;
+            /* Começa com 1% */
+            height: 16px;
+            background-color:rgb(117, 233, 9);
+            text-align: center;
+            /* Centraliza horizontalmente */
+            line-height: 15px;
+            /* Centraliza verticalmente */
+            color: rgb(61, 59, 59);
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id="div_geral">
+
+        <div id="div_btn_regionais">
+            <h2 id="h2_regionais">Campo de edição e funções dos "Regionais" </h2>
+            <div id="div_display_regionais">
+                <div>
+                    <label for="" onclick="BTN_R_01()">Cadastro <i class="fa-solid fa-id-card-clip"></i></label>
+                  
+                </div>
+                <div>
+                    <label for="" onclick="BTN_R_02()" >Botão 02</label>
+                </div>
+                <div>
+                    <label for="" onclick="BTN_R_03()" >Botão 03</label>
+                </div>
+                <div>
+                    <label for="" onclick="BTN_R_04()" >Botão 04</label>
+                </div>
+              
+            </div>
+            <h2 id="h2_estado_clube">Estado de funcionalidade do clube   <button id="only">.</button></h2>
+            <div id="div_check_R">
+            <label id="lbl_check_01"  for="check_R_01">O Clube está "Ativo"
+            <input type="checkbox" class="checked"  name="check_R_01" id="check_R_01">
+            </label>
+            <label id="lbl_check_02" for="check_R_02" > O Clube está "Desativado"
+            <input type="checkbox"class="checked_2"  name="check_R_02" id="check_R_02">
+            </label>
+            <br>
+            <div id="myProgress_">
+              <div id="myBar_">10%</div> 
+          </div>
+          <div id="myProgress">
+            <div id="myBar">10%</div>
+        </div>
+        </div>
+
+        </div>
+        <div id="div_diretores">
+          <h3 id="h3"> Campo de edição e funções do "Diretor e Secretária" .</h3>
+          <div id="div_D_01">
+              <img id="img" src="" alt="#" onclick="foto_ver()">
+              <input id="FILES" type="file">
+              <div id="myProgress_3">
+                <div id="myBar_3">10%</div>
+            </div>
+            </div>
+          <br>
+          <div id="div_D_02">
+            <div>
+            <button id="lbl_btn_01" for="" onclick="btn_01()">Novo logo <i class="fa-regular fa-file-image"></i></button><br>
+            <button id="lbl_btn_02" for="" onclick="btn_02()">Novo Membro <i class="fa-solid fa-user-plus"></i></button><br>
+            <button id="lbl_btn_03" for="" onclick="btn_03()">Endereço <i class="fa-solid fa-pen"></i></button><br>
+            <button id="lbl_btn_04" for="" onclick="btn_04()">Descrição <i class="fa-solid fa-pen"></i></button><br>
+            <button id="lbl_btn_05" for="" onclick="btn_05()">Fundado <i class="fa-solid fa-pen"></i></button><br>
+            <button id="lbl_btn_06" for="" onclick="btn_06()">Facebook</button><br>
+            <button id="lbl_btn_07" for="" onclick="btn_07()">Instagran</button><br>
+            <button id="lbl_btn_08" for="" onclick="btn_08()">WhatsApp</button>
+          </div>
+          <div>
+            <button id="lbl_btn_09" for="" onclick="btn_09()">Novo logo <i class="fa-regular fa-file-image"></i></button><br>
+            <button id="lbl_btn_10" for="" onclick="btn_10()">Novo Membro <i class="fa-solid fa-user-plus"></i></button><br>
+            <button id="lbl_btn_11" for="" onclick="btn_11()">Endereço <i class="fa-solid fa-pen"></i></button><br>
+            <button id="lbl_btn_12" for="" onclick="btn_12()">Descrição <i class="fa-solid fa-pen"></i></button><br>
+            <button id="lbl_btn_13" for="" onclick="btn_13()">Fundado <i class="fa-solid fa-pen"></i></button><br>
+            <button id="lbl_btn_14" for="" onclick="btn_14()">Facebook</button><br>
+            <button id="lbl_btn_15" for="" onclick="btn_15()">Instagran</button><br>
+            <button id="lbl_btn_16" for="" onclick="btn_16()">WhatsApp</button>
+          </div>
+          </div>
+
+        </div>
+
+
+    </div>
+    <script>
+      function btn_02() {
+        window.open('Cad_membros.html','_blank','icon=src/8Região.png, width=730, height=730, resizable= false, autoHideMenuBar= true')
+      }
+    </script>
+    <script> // Novo logo
+    function btn_01() {
+               var logo= localStorage.getItem('Logo_set_clube')
+               var clube= localStorage.getItem('Clube_set_clube')
+               var senha= localStorage.getItem('Senha_set_clube')
+               var cidade= localStorage.getItem('Cidade_set_clube')
+               var diretor= localStorage.getItem('Diretor_set_clube')
+               var email_D= localStorage.getItem('Email_diretor_set_clube')
+               var secretária= localStorage.getItem('Secretária_set_clube')
+               var email_S= localStorage.getItem('Email_secretária_set_clube')
+               var data= localStorage.getItem('Data_set_clube')
+               var hora= localStorage.getItem('Hora_set_clube')
+               var ativo= localStorage.getItem('Estado_clube')
+               var data_D= localStorage.getItem('D_Desativação_set_clube')
+               var hora_D= localStorage.getItem('H_Desativação_set_clube')
+               var descrição= localStorage.getItem('Descrição_set_clube')
+               var fundado= localStorage.getItem('Fundado_set_clube')
+               var end= localStorage.getItem('End_set_clube')
+               var facebook= localStorage.getItem('Facebook_set_clube')
+               var instagran= localStorage.getItem('Instagran_set_clube')
+               var whatsApp= localStorage.getItem('WhatsApp_set_clube')
+    
+      document.getElementById('FILES').click()
+
+      const firebaseConfig = {
+             apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+             authDomain: "sgc-regional.firebaseapp.com",
+             projectId: "sgc-regional",
+             storageBucket: "sgc-regional.appspot.com",
+             messagingSenderId: "572985076108",
+             appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+             measurementId: "G-QDG8H9S46F"
+           
+           };
+            firebase.initializeApp(firebaseConfig);
+
+            var uploader = document.getElementById('uploader ');
+            var fileButton = document.getElementById('FILES');
+            
+            fileButton.addEventListener('change', function(e) {
+                var file = e.target.files[0];
+                var storageRef = firebase.storage().ref('Log_Club/' + clube);
+                var task = storageRef.put(file);
+                task.on('state_changed', function progress(snapshot) {
+
+                    var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    uploader.value = percentage;
+
+                }, function error(err) {
+
+                }, function complete() {
+
+                    storageRef.getDownloadURL().then(function(url_imagem) {
+
+                                   let dbcb = firebase.firestore();
+                                    dbcb.collection('Clubes_Região').doc(clube).set({
+                                          
+                                          Logo: url_imagem,
+                                          Clube: clube,
+                                          Senha: senha,
+                                          Cidade: cidade,
+                                          Diretor: diretor,
+                                          Email_diretor: email_D,
+                                          Secretária: secretária,
+                                          Email_secretária: email_S,
+                                          Data: data,
+                                          Hora: hora,
+                                          Ativo: ativo,
+                                          Data_desativação: data_D,
+                                          Hora_desativação: hora_D,
+                                          Descrição: descrição,
+                                          Fundado: fundado,
+                                          End: end,
+                                          Facebook_Url: facebook,
+                                          Instagran_Url: instagran,
+                                          WhatsApp: whatsApp,
+                                    })
+                               
+
+                 
+                          
+                        document.getElementById('myProgress_3').style.display = 'block'
+                        var i = 0;
+
+                        if (i == 0) {
+                            i = 1;
+                            var elem = document.getElementById("myBar_3");
+                            var width = 1;
+                            var id = setInterval(frame, 30);
+
+                            function frame() {
+                                if (width >= 100) {
+                                    clearInterval(id);
+                                    i = 0;
+                                                     
+                                    window.localStorage.setItem('Logo_set_clube', url_imagem);
+                                    
+                                    document.getElementById('img').src = url_imagem
+                                      document.getElementById('myProgress_3').style.display = 'none'
+
+                                } else {
+                                    width++;
+                                    elem.style.width = width + "%";
+                                    elem.innerHTML = width + "%"; // Atualiza o texto do rótulo
+                                }
+                            }
+                        }
+
+                    })
+                })
+            })
+    }
+
+    </script>
+     <script>
+
+        function foto_ver() {
+          var clube_logo= localStorage.getItem('Logo_set_clube')
+          window.open(clube_logo,'Imagem','icon=src/Profile-PNG-Images.png, height=730,width=730,autoHideMenuBar=true');
+        }
+
+      function BTN_R_01() {
+        window.open('../Clubes/Cadastro_clube.html','_blank', "icon=src/8Região.png, width=730, height=730, resizable= false, autoHideMenuBar= true")
+      }
+
+     </script>
+    <script> //LocalStorage - Clube clicado
+
+               var clube_user= localStorage.getItem('Clubes_nome_user');
+               if(clube_user == 'Regionais' || clube_user == 'regionais' || clube_user == 'Reginal' || clube_user == 'regional'){
+                document.getElementById('div_btn_regionais').style.display= 'block'
+                } else {
+                    document.getElementById('div_btn_regionais').style.display= 'none'
+
+                }
+
+                 // localStorage.setItem('Nome_user', nome_user);
+                //  localStorage.setItem('Email_user', email_user);
+                //  localStorage.setItem('Tel_user', Tel_user);
+                //  localStorage.setItem('Clubes_senha', senha_clube);
+                //  localStorage.setItem('Endereço_user', End_user);
+                //  localStorage.setItem('foto_user', url_foto_user);    
+                 // localStorage.setItem('Data_user', data_user);
+                //  localStorage.setItem('Hora_user', hora_user);
+                //  localStorage.setItem('Data_nasc', Data_nasc_user);
+                //  localStorage.setItem('Cargo_user', cargo_user);
+
+               var logo= localStorage.getItem('Logo_set_clube')
+               var clube= localStorage.getItem('Clube_set_clube')
+               var senha= localStorage.getItem('Senha_set_clube')
+               var cidade= localStorage.getItem('Cidade_set_clube')
+               var diretor= localStorage.getItem('Diretor_set_clube')
+               var email_D= localStorage.getItem('Email_diretor_set_clube')
+               var secretária= localStorage.getItem('Secretária_set_clube')
+               var email_S= localStorage.getItem('Email_secretária_set_clube')
+               var data= localStorage.getItem('Data_set_clube')
+               var hora= localStorage.getItem('Hora_set_clube')
+               var ativo= localStorage.getItem('Estado_clube')
+               var data_D= localStorage.getItem('D_Desativação_set_clube')
+               var hora_D= localStorage.getItem('H_Desativação_set_clube')
+               var descrição= localStorage.getItem('Descrição_set_clube')
+               var fundado= localStorage.getItem('Fundado_set_clube')
+               var end= localStorage.getItem('End_set_clube')
+               var facebook= localStorage.getItem('Facebook_set_clube')
+               var instagran= localStorage.getItem('Instagran_set_clube')
+               var whatsApp= localStorage.getItem('WhatsApp_set_clube')
+               document.getElementById('img').src= logo
+
+               if(ativo == 'Ativo') {
+                document.getElementById('check_R_01').checked = true;
+                document.getElementById('check_R_02').checked = false;
+                document.getElementById('only').style.backgroundColor= 'rgb(117, 233, 9)'  
+                  
+              
+               
+               } else if(ativo == 'Desativado') {
+                document.getElementById('check_R_02').checked = true;
+                document.getElementById('check_R_01').checked = false;
+                 document.getElementById('only').style.backgroundColor= 'red'
+                
+             
+            
+               };
+        
+         document.getElementById('check_R_01').addEventListener('change', function() {
+          if(this.checked) {
+            document.getElementById('check_R_02').checked = false;
+            document.getElementById('check_R_01').checked = true;
+            localStorage.setItem('Estado_clube', 'Ativo');
+            document.getElementById('check_R_02')
+
+            var logo= localStorage.getItem('Logo_set_clube')
+               var clube= localStorage.getItem('Clube_set_clube')
+               var senha= localStorage.getItem('Senha_set_clube')
+               var cidade= localStorage.getItem('Cidade_set_clube')
+               var diretor= localStorage.getItem('Diretor_set_clube')
+               var email_D= localStorage.getItem('Email_diretor_set_clube')
+               var secretária= localStorage.getItem('Secretária_set_clube')
+               var email_S= localStorage.getItem('Email_secretária_set_clube')
+               var data= localStorage.getItem('Data_set_clube')
+               var hora= localStorage.getItem('Hora_set_clube')
+               var ativo_= localStorage.getItem('Estado_clube')
+               var data_D= ''
+               var hora_D= ''
+               var descrição= localStorage.getItem('Descrição_set_clube')
+               var fundado= localStorage.getItem('Fundado_set_clube')
+               var end= localStorage.getItem('End_set_clube')
+               var facebook= localStorage.getItem('Facebook_set_clube')
+               var instagran= localStorage.getItem('Instagran_set_clube')
+               var whatsApp= localStorage.getItem('WhatsApp_set_clube')
+             
+            const firebaseConfigs = {
+            apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+            authDomain: "sgc-regional.firebaseapp.com",
+            projectId: "sgc-regional",
+            storageBucket: "sgc-regional.appspot.com",
+            messagingSenderId: "572985076108",
+            appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+            measurementId: "G-QDG8H9S46F"
+          };
+
+        firebase.initializeApp(firebaseConfigs);
+        
+            let db = firebase.firestore();
+
+              db.collection('Clubes_Região').doc(clube).set({
+                              
+                 Logo: logo,
+                 Clube: clube,
+                 Senha: senha,
+                 Cidade: cidade,
+                 Diretor: diretor,
+                 Email_diretor: email_D,
+                 Secretária: secretária,
+                 Email_secretária: email_S,
+                 Data: data,
+                 Hora: hora,
+                 Ativo: ativo_,
+                 Data_desativação: data_D,
+                 Hora_desativação: hora_D,
+                 Descrição: descrição,
+                 Fundado: fundado,
+                 End: end,
+                 Facebook_Url: facebook,
+                 Instagran_Url: instagran,
+                 WhatsApp: whatsApp,
+                 
+              })
+              document.getElementById('myProgress_').style.display = 'block'
+              document.getElementById('myProgress').style.display = 'none'
+                        var i = 0;
+
+                        if (i == 0) {
+                            i = 1;
+                            var elem = document.getElementById("myBar_");
+                            var width = 1;
+                            var id = setInterval(frame, 20);
+
+                            function frame() {
+                                if (width >= 100) {
+                                    clearInterval(id);
+                                    i = 0;
+                                   
+                                document.getElementById('only').style.backgroundColor= 'rgb(117, 233, 9)'
+                             document.getElementById('myProgress_').style.display = 'none'
+                             localStorage.setItem('reload_C_D','ok');
+
+                                } else {
+                                    width++;
+                                    elem.style.width = width + "%";
+                                    elem.innerHTML = width + "%"; // Atualiza o texto do rótulo
+                                }
+                            }
+                        }  
+
+            var ativo= localStorage.getItem('Estado_clube')
+         
+          }
+        });
+
+        document.getElementById('check_R_02').addEventListener('change', function() {
+          if(this.checked) {
+            document.getElementById('check_R_01').checked = false;
+            localStorage.setItem('Estado_clube', 'Desativado')
+            var data_Atual = localStorage.getItem('data')
+            var timeString = localStorage.getItem('hora')
+
+               var logo= localStorage.getItem('Logo_set_clube')
+               var clube= localStorage.getItem('Clube_set_clube')
+               var senha= localStorage.getItem('Senha_set_clube')
+               var cidade= localStorage.getItem('Cidade_set_clube')
+               var diretor= localStorage.getItem('Diretor_set_clube')
+               var email_D= localStorage.getItem('Email_diretor_set_clube')
+               var secretária= localStorage.getItem('Secretária_set_clube')
+               var email_S= localStorage.getItem('Email_secretária_set_clube')
+               var data= localStorage.getItem('Data_set_clube')
+               var hora= localStorage.getItem('Hora_set_clube')
+               var ativo_2= localStorage.getItem('Estado_clube')
+               var data_D= data_Atual
+               var hora_D= timeString
+               var descrição= localStorage.getItem('Descrição_set_clube')
+               var fundado= localStorage.getItem('Fundado_set_clube')
+               var end= localStorage.getItem('End_set_clube')
+               var facebook= localStorage.getItem('Facebook_set_clube')
+               var instagran= localStorage.getItem('Instagran_set_clube')
+               var whatsApp= localStorage.getItem('WhatsApp_set_clube')
+             
+            const firebaseConfigure = {
+            apiKey: "AIzaSyBEIt3VdGAYisH6mYSoyN--MR-552AFNjQ",
+            authDomain: "sgc-regional.firebaseapp.com",
+            projectId: "sgc-regional",
+            storageBucket: "sgc-regional.appspot.com",
+            messagingSenderId: "572985076108",
+            appId: "1:572985076108:web:8b41ed0ec5c15aa9becea9",
+            measurementId: "G-QDG8H9S46F"
+          };
+
+        firebase.initializeApp(firebaseConfigure);
+        
+            let db_2 = firebase.firestore();
+
+              db_2.collection('Clubes_Região').doc(clube).set({
+                             
+                 Logo: logo,
+                 Clube: clube,
+                 Senha: senha,
+                 Cidade: cidade,
+                 Diretor: diretor,
+                 Email_diretor: email_D,
+                 Secretária: secretária,
+                 Email_secretária: email_S,
+                 Data: data,
+                 Hora: hora,
+                 Ativo: ativo_2,
+                 Data_desativação: data_D,
+                 Hora_desativação: hora_D,
+                 Descrição: descrição,
+                 Fundado: fundado,
+                 End: end,
+                 Facebook_Url: facebook,
+                 Instagran_Url: instagran,
+                 WhatsApp: whatsApp,
+                 
+              })
+              document.getElementById('myProgress').style.display = 'block'
+                document.getElementById('myProgress_').style.display = 'none'
+
+                        var i = 0;
+
+                        if (i == 0) {
+                            i = 1;
+                            var elem = document.getElementById("myBar");
+                            var width = 1;
+                            var id = setInterval(frame, 20);
+
+                            function frame() {
+                                if (width >= 100) {
+                                    clearInterval(id);
+                                    i = 0;
+                                 
+                              document.getElementById('only').style.backgroundColor= 'red'
+                             document.getElementById('myProgress').style.display = 'none'
+                             localStorage.setItem('reload_C_D','ok');
+
+                                } else {
+                                    width++;
+                                    elem.style.width = width + "%";
+                                    elem.innerHTML = width + "%"; // Atualiza o texto do rótulo
+                                }
+                            }
+                        }
+
+            var ativo= localStorage.getItem('Estado_clube')
+        
+          }
+        });
+
+   
+    
+    </script>
+      <script>
+        setInterval(function() {
+     const newDate = new Date()
+     var dia = String(newDate.getDate()).padStart(2, '0');
+     var mes = String(newDate.getMonth() + 1).padStart(2, '0');
+     var ano = String(newDate.getFullYear()).padStart(2, '0')
+     var data = `${dia}/${mes}/${ano}`
+     const now = new Date();
+     const hours = now.getHours().toString().padStart(2, '0');
+     const minutes = now.getMinutes().toString().padStart(2, '0');
+     const seconds = now.getSeconds().toString().padStart(2, '0');
+     const timeString = `${hours}:${minutes}:${seconds}`;
+    // const lbl_data = document.getElementById('lbl-data');
+     const lbl_hora = document.getElementById('lbl-hora');
+     // lbl_data.innerHTML = `${data}`
+     lbl_hora.innerHTML = `${timeString} `
+     localStorage.setItem('data', data)
+     localStorage.setItem('hora', timeString)
+
+ }, 1000)
+   </script>
+</body>
+</html>
